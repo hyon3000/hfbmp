@@ -1,0 +1,6 @@
+{
+  "name": "Hfbmp",
+  "tagline": "hyon's fucking black midi player",
+  "body": "### 하이온의 젓같은 검은미디 플레이어\r\n최신 버전:v1.1.0.5.12\r\n\r\n검은미디의 끊김없는 재생을 위해 개발된 미디 플레이어로써 미디 데이터 처리를 재생 전에 처리해 끊김을 없앴음. 부가 기능으로 음표 수 카운터와 자막 출력 등을 지원하며,자막 출력은 미디 파일과 같은 이름을 가지는 lrc 파일을 미디 파일과 같은 폴더 안에 넣음으로써 사용할 수 있음.추후 사운드폰트 지원과 그래픽 가속,분산 컴퓨팅 등을 지원할 계획.\r\n\r\n방금 빌드된 프로그램은 http://cafe.naver.com/hfbmp에서 확인할 수 있음\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
