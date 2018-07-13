@@ -1139,6 +1139,8 @@ inline void getmidieventacc() {
 						if (i < 1999) {
 							mdstrings[i] = sjgf(ch, j); mdstrings[i + 1] = 0;
 							if (mdstrings[i] == 0x20) mdstrings[i] = 0x10;
+							else if (mdstrings[i] == 0x0A) mdstrings[i] = 0x10;
+							else if (mdstrings[i] == 0x0D) mdstrings[i] = 0x10;
 						}
 						else sjgf(ch, j);
 					}
@@ -1406,6 +1408,8 @@ inline void getmidieventacc() {
 								if (i < 1999) {
 									mdstrings[i] = sjgf(ch, j); mdstrings[i + 1] = 0;
 									if (mdstrings[i] == 0x20) mdstrings[i] = 0x10;
+									else if (mdstrings[i] == 0x0A) mdstrings[i] = 0x10;
+									else if (mdstrings[i] == 0x0D) mdstrings[i] = 0x10;
 								}
 								else sjgf(ch, j);
 							}
@@ -1705,6 +1709,8 @@ inline void getmidievent2() {
 								if (i < 1999) {
 									mdstrings[i] = sjgf(ch, j); mdstrings[i + 1] = 0;
 									if (mdstrings[i] == 0x20) mdstrings[i] = 0x10;
+									else if (mdstrings[i] == 0x0A) mdstrings[i] = 0x10;
+									else if (mdstrings[i] == 0x0D) mdstrings[i] = 0x10;
 								}
 								else sjgf(ch, j);
 							}
@@ -2070,6 +2076,8 @@ inline void getmidieventacc1() {
 						if (i < 1999) {
 							mdstrings[i] = sjgf(ch, j); mdstrings[i + 1] = 0;
 							if (mdstrings[i] == 0x20) mdstrings[i] = 0x10;
+							else if (mdstrings[i] == 0x0A) mdstrings[i] = 0x10;
+							else if (mdstrings[i] == 0x0D) mdstrings[i] = 0x10;
 						}
 						else sjgf(ch, j);
 					}
@@ -2359,6 +2367,8 @@ inline void getmidieventacc1() {
 								if (i < 1999) {
 									mdstrings[i] = sjgf(ch, j); mdstrings[i + 1] = 0;
 									if (mdstrings[i] == 0x20) mdstrings[i] = 0x10;
+									else if (mdstrings[i] == 0x0A) mdstrings[i] = 0x10;
+									else if (mdstrings[i] == 0x0D) mdstrings[i] = 0x10;
 								}
 								else sjgf(ch, j);
 							}
@@ -2700,6 +2710,8 @@ inline void getmidievent21() {
 								if (i < 1999) {
 									mdstrings[i] = sjgf(ch, j); mdstrings[i + 1] = 0;
 									if (mdstrings[i] == 0x20) mdstrings[i] = 0x10;
+									else if (mdstrings[i] == 0x0A) mdstrings[i] = 0x10;
+									else if (mdstrings[i] == 0x0D) mdstrings[i] = 0x10;
 								}
 								else sjgf(ch, j);
 							}
@@ -4015,9 +4027,17 @@ inline void CCubeView::arecloop() {
 
 
 	int timers = 0;
-	wptr = wptr * 44100 / playrate;
+	int t;
+	//wptr = wptr * 44100 / playrate;
+	wptr = 0;
 	wj4 = fopen(tsb2, "r");
+	
+	while ((t = fgetc(wj4)) != EOF) if (t == 0x0A) wptr++;
+	wptr = (wptr / 35) * 10 + (wptr % 35 - 5) / 3;
+	wptr *= 4410;
+	fseek(wj4,0,SEEK_SET);
 	owptr4 = note;
+	
 	unsigned long long ct2[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	int gergafrvh = 0, gergafrvh2 = wptr / 158760000;
 	int gergafrvm = 0, gergafrvm2 = wptr / 2646000 - gergafrvh2 * 60;
@@ -4421,8 +4441,8 @@ inline void CCubeView::DrawScene(void)
 					else {
 						owptr6 = 0; wptr += playrd100;
 					}
-
-					if (wptr - owptr4 == playrd10) {
+					owptr4++;
+					if (owptr4==10) {
 						if (GetTickCount64() - owptr2 > 2000) {
 
 							//owptr3 += 2;
@@ -4493,7 +4513,7 @@ inline void CCubeView::DrawScene(void)
 						owptr5--; if (owptr5 == -1) {
 							owptr5 = 9; fprintf(wj2, "%u\n%d\n%d\n%d\n%d\n", tempo, bth, btl, keysig, keysig2);
 						}
-						owptr4 = wptr;
+						owptr4 = 0;
 						pnote = 0;
 						for (int i = 0; i < 128; i++)
 							for (int j = 0; j < 16; j++) pnote += (key3[i][j] != 0);
@@ -4516,6 +4536,8 @@ inline void CCubeView::DrawScene(void)
 									lrct4 = (int)((double)playrate*(lrct1*60. + lrct2));
 									for (int i = 0; i < strlen(lrcc2); i++)
 										if (lrcc2[i] == 0x20) lrcc2[i] = 0x10;
+										else if (lrcc2[i] == 0x0A) lrcc2[i] = 0x10;
+										else if (lrcc2[i] == 0x0D) lrcc2[i] = 0x10;
 								}
 								else {
 									lrct4 = INT64_MAX;
