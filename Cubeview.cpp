@@ -175,7 +175,7 @@ int2char wjct2;
 chbuf *chbuffer;
 FILE *wj, *wj2, *wj3, *wj6, *wj7, *i, *wj4, *ch, *lrcf, *playmidif, *playmidig;
 
-bool bt, gtmp, gmea, mov, dbc, lrcb, ps, fs, skip, ppmy, txtoff, playrd100t, playrd100t2, *buf, keysig2, stop, damppad[16], softpad[16], sti3, stop2, g3446 = true, atmod, wjaa, updta, vol, strclrc, ply = true, f, fnm, pb, quit, htit, mmp, forcenomidi, sdfsdf, exbl;
+bool ab=0,bt, gtmp, gmea, mov, dbc, lrcb, ps, fs, skip, ppmy, txtoff, playrd100t, playrd100t2, *buf, keysig2, stop, damppad[16], softpad[16], sti3, stop2, g3446 = true, atmod, wjaa, updta, vol, strclrc, ply = true, f, fnm, pb, quit, htit, mmp, forcenomidi, sdfsdf, exbl;
 char t[10000], tsb1[10000], tsb[10000], tsb2[10000], tsb3[10000], tsb4[10000], tsb6[10000], tsb5[10000], tsb8[1025], tsb9[400], *buffer, opbuf[8000], mdstrings[2000], chrinp[100], ktemp[1056], ktt, lrcc1[2000], lrcc2[2000], lrcc3[2000], tsb7[10000], argv[1000], tj[1000], imgname[1000], mdt[500][268][16], p[100], *midname, *midname2, str[10000], midstr[1000], otsb2[1000], tsb0[1000];
 short pc2[16], *key5[128], stm, midipan;
 int windh, windv, ox, oy, frqt, gmetmp2, midipitchbend[16][2], mdtpnt2, owindx, owindy, monce, onelp, pitchint[16], q, ips, ro, midipitchbend2[16], midipitchbend_[16], pitchint2[16], midipitch, tmpmode, lt, glcounter[8], wavestate, windx, windy, ocl, bfps, fps, txtys, key3[128][16], keysust[128][16], *oldstate, midibx[128][16], playrd10, chn = -1, yryer, opbufcnt, oks, ipaused[16], bpaused[16], cpaused[16], rpaused[16], mpaused[16], j5gyj, chrcnt, bth = 4, btl = 4, keysig = 8, *chbuffercnt, textmode, windowx, windowy, mode, ii, stringcount, mdtpnt, brebe, txtmd2, tpi, knamei, kfreqi, hortxti, mirror, reverse, trand, asfaq, mpoffset, setmidivol, fspace = 100, isplay, midibank[16], fmbank[16], midipreset[16], fmpreset[16], ombank[16], ompreset[16], bpshf;
@@ -379,44 +379,13 @@ inline void getini() {
 		
 		windh = 1024;
 		windv = 768;
-		windowx = 100;
-		windowy = 100;
+		
 		turfreq = 440.0f;
 		fsize = 20; fspace = 100;
 		strcpy(jk678[13], "Arial");
 		
 		ini = fopen(stf, "w");
-		printf("5");
-		for (int i = 0; i < 12; i++) fprintf(ini, "_\n");
-
-		intfloat t[16];
-		t[0].a = h45h7;
-		t[1].a = gasfw;
-		t[2].a = hg4h5;
-		t[3].a = tr;
-		t[4].a = tg;
-		t[5].a = tb;
-		t[6].a = ta;
-		t[7].a = turfreq;
-		t[8].a = x;
-		t[9].a = y;
-		t[10].a = stretchx;
-		t[11].a = stretchy;
-		t[12].a = stretchz;
-		t[13].a = upbl;
-		t[14].a = dwbl;
-		t[15].a = j5jgj;
-
-		fprintf(ini, "%d %d %d %d %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x_\n", windowx, windowy, windh, windv, mmp, t[0].b, t[1].b, t[2].b, t[3].b, t[4].b, t[5].b, t[6].b, 350, 100, textmode, h54ui, jhj56, ghkj6, j65j8, trand, mirror, reverse, knamei, kfreqi, hortxti, t[7].b, t[8].b, t[9].b, t[10].b, fsize, fspace, t[11].b, t[12].b, t[13].b, t[14].b, txtmd2, t[15].b);
-		fprintf(ini, "1\n");
-		for (int i = 0; i < 16; i++) {
-			t[0].a = (float)(getr(sbcolor[i])) / 256;
-			t[1].a = (float)(getg(sbcolor[i])) / 256;
-			t[2].a = (float)(getb(sbcolor[i])) / 256;
-			t[3].a = 0.99609375;
-			fprintf(ini, "%x %x %x %x\n", t[0].b, t[1].b, t[2].b, t[3].b);
-		}
-		fprintf(ini, "Arial_\n");
+		fprintf(ini, "_\n_\n_\n_\n_\n_\n_\n_\n_\n_\n_\n_\n100 100 1024 768 0 0 0 0 3f000000 3f000000 3f000000 3f800000 15e 64 0 0 2 0 64 0 0 0 0 0 0 43dc0000 0 0 3f800000 14 64 3f800000 3f800000 3dcccccd 3e99999a 0 3f800000_\n1\n3f7f0000 0 3efe0000 3f7f0000\n3eee0000 3f350000 3f7e0000 3f7f0000\n3f7f0000 3f5f0000 0 3f7f0000\n3f3f0000 3f7f0000 0 3f7f0000\n3efe0000 0 3f7f0000 3f7f0000\n0 3f7f0000 3f7f0000 3f7f0000\n3f600000 3f300000 3f7f0000 3f7f0000\n3f7f0000 3f650000 3f340000 3f7f0000\n3f230000 3f410000 3f2d0000 3f7f0000\n3f400000 3f400000 3f400000 3f7f0000\n3f410000 3f1a0000 3ed60000 3f7f0000\n3f7e0000 3e9c0000 3f5a0000 3f7f0000\n3f700000 3f7f0000 3f700000 3f7f0000\n3ea00000 3f480000 3ef00000 3f7f0000\n3f7d0000 3f7f0000 0 3f7f0000\n3f670000 3f7e0000 3f7f0000 3f7f0000\nArial_");
 		fclose(ini);
 		Sleep(10);
 		ini = fopen(stf, "r");
@@ -493,7 +462,18 @@ inline void getini() {
 	dwbl = t[14].a;
 	j5jgj = t[15].a;
 	//////printf("%f %f ",j5jgj, t[15].a);
+	if (stretchx < 0.00099 || stretchx >1001. || stretchy < 0.00099 || stretchy >1001.|| stretchz < 0.00099 || stretchz >1001.) {
+		Sleep(10);
+		
+		char p[1000];
+		
+		sprintf(p, "del \"%s\"", stf);
+		system(p);
+		Sleep(100);
+		getini();
+		//exit(1);
 
+	}
 	printf("A");
 	//printf("3");
 	//system("pause");
@@ -601,7 +581,7 @@ inline double freq(int a) {
 		////printf("^%lf^", c, turfreq);
 		return c*turfreq / 440.;
 	}
-	else if (jhj56>2) {//69Î≤àÌÇ§Í∞Ä Îùº
+	else if (jhj56>2) {//69π¯≈∞∞° ∂Û
 		frqt = a % 12;
 		if (frqt == 9) {
 			int b = a - 69;
@@ -726,7 +706,7 @@ inline double freq(int a) {
 		}
 		//
 	}
-	else {//69Î≤àÌÇ§Í∞Ä Îùº
+	else {//69π¯≈∞∞° ∂Û
 		frqt = a % 12;
 		if (frqt == 9) {
 			int b = a - 69;
@@ -2772,8 +2752,8 @@ inline void pauseall() {
 }
 inline void waveOutSetPosition(int milliseconds) {
 
-	wh.lpData = buffer + 2 * (milliseconds*playrate / 1000); // ÏÜåÎ¶¨ Îç∞Ïù¥ÌÑ∞Í∞Ä ÏûàÎäî ÏúÑÏπò
-	wh.dwBufferLength = mDataChunk.chunkDataSize - 2 * (milliseconds*playrate / 1000); // ÏÜåÎ¶¨ Îç∞Ïù¥ÌÑ∞Ïùò ÌÅ¨Í∏∞
+	wh.lpData = buffer + 2 * (milliseconds*playrate / 1000); // º“∏Æ µ•¿Ã≈Õ∞° ¿÷¥¬ ¿ßƒ°
+	wh.dwBufferLength = mDataChunk.chunkDataSize - 2 * (milliseconds*playrate / 1000); // º“∏Æ µ•¿Ã≈Õ¿« ≈©±‚
 	wh.dwFlags = 0;
 	wh.dwLoops = 0;
 	waveOutReset(hWaveOut);
@@ -3339,6 +3319,8 @@ BEGIN_MESSAGE_MAP(CCubeView, CView)
 	ON_COMMAND(ID_FILE_UNINSTALL, &CCubeView::OnFileUninstall)
 	ON_WM_MOVE()
 	ON_WM_MOVING()
+//	ON_MESSAGE(a, &CCubeView::a)
+//ON_MESSAGE(WM_A, &CCubeView::OnA)
 END_MESSAGE_MAP()
 CCubeView::CCubeView()
 {
@@ -3457,9 +3439,9 @@ inline void CCubeView::main2(char *argv2) {
 		y = fopen(argv, "rb");
 		if (y == NULL) {
 			if (kj768 == true)
-				MessageBox("ÏóêÎü¨-ÌååÏùºÏùÑ Ïó¥ Ïàò ÏóÜÏùå", "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0", MB_OK | MB_ICONSTOP);
+				MessageBox("ø°∑Ø-∆ƒ¿œ¿ª ø≠ ºˆ æ¯¿Ω", "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1", MB_OK | MB_ICONSTOP);
 			else
-				MessageBox("error-can't open file", "hyon's midi player v5.0", MB_OK | MB_ICONSTOP);
+				MessageBox("error-can't open file", "hyon's midi player v5.1", MB_OK | MB_ICONSTOP);
 			exit(1);
 		}
 		char t[10];
@@ -3468,9 +3450,9 @@ inline void CCubeView::main2(char *argv2) {
 		printf("%s", t);
 		if (strcmp((char*)t, "MThd")) {
 			if (kj768 == true)
-				MessageBox("ÏóêÎü¨-ÌååÏùºÏùÑ Ïó¥ Ïàò ÏóÜÏùå", "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0", MB_OK | MB_ICONSTOP);
+				MessageBox("ø°∑Ø-∆ƒ¿œ¿ª ø≠ ºˆ æ¯¿Ω", "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1", MB_OK | MB_ICONSTOP);
 			else
-				MessageBox("error-can't open file", "hyon's midi player v5.0", MB_OK | MB_ICONSTOP);
+				MessageBox("error-can't open file", "hyon's midi player v5.1", MB_OK | MB_ICONSTOP);
 			exit(1);
 
 		}
@@ -3693,7 +3675,7 @@ M:
 	}
 	//printf("!");
 	if (kj768 == true)
-		sprintf(t, "Ìä∏Îûô Ïàò:%d", chn);
+		sprintf(t, "∆Æ∑¢ ºˆ:%d", chn);
 	else
 		sprintf(t, "Tracks:%d", chn);
 	//printf("?");
@@ -3704,7 +3686,7 @@ M:
 
 	if (chn == 0) {
 		if (kj768 == true) {
-			MessageBox("ÏóêÎü¨-Íπ®ÏßÑ ÎØ∏Îîî ÌååÏùºÏûÑ", "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0", MB_OK | MB_ICONSTOP); Sleep(1000); if (!midiout) {
+			MessageBox("ø°∑Ø-±˙¡¯ πÃµ ∆ƒ¿œ¿”", "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1", MB_OK | MB_ICONSTOP); Sleep(1000); if (!midiout) {
 				//	MessageBox("B", "B", MB_OK);
 				//cmidi.Pause();
 				//Sleep(100);
@@ -3727,7 +3709,7 @@ M:
 			}exit2(1);
 		}
 		else {
-			MessageBox("error-broken midi file", "hyon's midi player v5.0", MB_OK | MB_ICONSTOP); Sleep(1000); if (!midiout) {
+			MessageBox("error-broken midi file", "hyon's midi player v5.1", MB_OK | MB_ICONSTOP); Sleep(1000); if (!midiout) {
 				//	MessageBox("B", "B", MB_OK);
 				//cmidi.Pause();
 				TerminateThread(thread1, 0);
@@ -3875,7 +3857,7 @@ M:
 		FILE *tmp = fopen(jk678[11], "r");
 		if (tmp == 0) {
 			if (kj768 == true)
-				MessageBoxA("ÏóêÎü¨-ÏÇ¨Ïö¥ÎìúÌè∞Ìä∏ ÌååÏùºÏùÑ Ï∞æÏùÑ Ïàò ÏóÜÏùå");
+				MessageBoxA("ø°∑Ø-ªÁøÓµÂ∆˘∆Æ ∆ƒ¿œ¿ª √£¿ª ºˆ æ¯¿Ω");
 			else
 				MessageBoxA("error-can't find soundfont file");
 			FILE *tmp2 = fopen("gm.sf2", "r");
@@ -4053,7 +4035,7 @@ inline void CCubeView::arecloop() {
 	if (kj768 == false)
 		fprintf(wj5, "0:0:0.0/%d:%d:%.1f\n0/%llu\n0notes/sec,0polyphony\n%ubpm,%d/%dbeat,%s\n%c\n", gergafrvh2, gergafrvm2, gergafrv2, owptr4, tempo, bth, btl, ekeysigm[keysig2][keysig], 0x10);
 	else
-		fprintf(wj5, "0:0:0.0/%d:%d:%.1f\n0/%llu\n0ÏùåÌëú/Ï¥à,0ÎàåÎ¶º\n%ubpm,%d/%dÎ∞ïÏûê,%s\n%c\n", gergafrvh2, gergafrvm2, gergafrv2, owptr4, tempo, bth, btl, kkeysigm[keysig2][keysig], 0x10);
+		fprintf(wj5, "0:0:0.0/%d:%d:%.1f\n0/%llu\n0¿Ω«•/√ ,0¥≠∏≤\n%ubpm,%d/%dπ⁄¿⁄,%s\n%c\n", gergafrvh2, gergafrvm2, gergafrv2, owptr4, tempo, bth, btl, kkeysigm[keysig2][keysig], 0x10);
 	while (1) {
 
 		if (gergafrv >= 60.0) {
@@ -4081,7 +4063,7 @@ inline void CCubeView::arecloop() {
 				fprintf(wj5, "%d:%d:%.1f/%d:%d:%.1f\n%llu/%llu\n%llunotes/sec,%lldpolyphony\n%ubpm,%d/%dbeat,%s\n%s\n", gergafrvh, gergafrvm, gergafrv, gergafrvh2, gergafrvm2, gergafrv2, note, owptr4, note - ct2[0], pnote, tempo, bth, btl, ekeysigm[keysig2][keysig], mdstrings);
 			}
 			else {
-				fprintf(wj5, "%d:%d:%.1f/%d:%d:%.1f\n%llu/%llu\n%lluÏùåÌëú/Ï¥à,%lldÎàåÎ¶º\n%ubpm,%d/%dÎ∞ïÏûê,%s\n%s\n", gergafrvh, gergafrvm, gergafrv, gergafrvh2, gergafrvm2, gergafrv2, note, owptr4, note - ct2[0], pnote, tempo, bth, btl, kkeysigm[keysig2][keysig], mdstrings);
+				fprintf(wj5, "%d:%d:%.1f/%d:%d:%.1f\n%llu/%llu\n%llu¿Ω«•/√ ,%lld¥≠∏≤\n%ubpm,%d/%dπ⁄¿⁄,%s\n%s\n", gergafrvh, gergafrvm, gergafrv, gergafrvh2, gergafrvm2, gergafrv2, note, owptr4, note - ct2[0], pnote, tempo, bth, btl, kkeysigm[keysig2][keysig], mdstrings);
 
 			}
 			gergafrv += 0.1;
@@ -4099,7 +4081,7 @@ inline void CCubeView::arecloop() {
 			fprintf(wj5, "%d:%d:%.1f/%d:%d:%.1f\n%llu/%llu\n%llunotes/sec,%lldpolyphony\n%ubpm,%d/%dbeat,%s\n%s\n", gergafrvh, gergafrvm, gergafrv, gergafrvh2, gergafrvm2, gergafrv2, note, owptr4, note - ct2[0], pnote, tempo, bth, btl, ekeysigm[keysig2][keysig], mdstrings);
 		}
 		else {
-			fprintf(wj5, "%d:%d:%.1f/%d:%d:%.1f\n%llu/%llu\n%lluÏùåÌëú/Ï¥à,%lldÎàåÎ¶º\n%ubpm,%d/%dÎ∞ïÏûê,%s\n%s\n", gergafrvh, gergafrvm, gergafrv, gergafrvh2, gergafrvm2, gergafrv2, note, owptr4, note - ct2[0], pnote, tempo, bth, btl, kkeysigm[keysig2][keysig], mdstrings);
+			fprintf(wj5, "%d:%d:%.1f/%d:%d:%.1f\n%llu/%llu\n%llu¿Ω«•/√ ,%lld¥≠∏≤\n%ubpm,%d/%dπ⁄¿⁄,%s\n%s\n", gergafrvh, gergafrvm, gergafrv, gergafrvh2, gergafrvm2, gergafrv2, note, owptr4, note - ct2[0], pnote, tempo, bth, btl, kkeysigm[keysig2][keysig], mdstrings);
 
 		}
 		gergafrv += 0.1;
@@ -4151,7 +4133,11 @@ int CCubeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CView::OnCreate(lpCreateStruct) == -1)
 		return -1;
+
 	for (int i = 0; i < __argc; i++)printf("! %s!\n", __argv[i]);
+	st.Create(IDD_settings);
+	st2.Create(IDD_viewsettings);
+	st3.Create(IDD_DIALOG1);
 	st4.Create(IDD_DIALOG2);
 	printf("J");
 	getini();
@@ -4180,9 +4166,9 @@ int CCubeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//("*");
 	if (kj768 == true)
-		GetParent()->SetWindowTextA("ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0");
+		GetParent()->SetWindowTextA("«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1");
 	else
-		GetParent()->SetWindowTextA("hyon's midi player v5.0");
+		GetParent()->SetWindowTextA("hyon's midi player v5.1");
 	printf("P");
 	CRect rct; GetClientRect(rct);
 	windx = rct.Width();
@@ -4383,6 +4369,12 @@ BOOL CCubeView::bSetupPixelFormat()
 }
 inline void CCubeView::DrawScene(void)
 {
+	if (ab == 1) {
+		ab = 0;
+		//st3.OnInitDialog();
+	}
+	UpdateData(1);
+	::SendMessage(st3.GetSafeHwnd(), WM_TIMER, 1, 0);
 	sq1 = 1;
 	if (ply == false && f == false && onelp == 0) goto T2;
 
@@ -4394,7 +4386,7 @@ inline void CCubeView::DrawScene(void)
 	}
 	//(")");
 	{
-		UpdateData(1);
+		
 		CClientDC dc(this);
 		if (mode < 0) {
 			if (chrcnt == -1) { chrcnt = 0; main2(0); }
@@ -4451,7 +4443,7 @@ inline void CCubeView::DrawScene(void)
 
 
 							if (kj768 == true)
-								sprintf(t, "Î∂àÎü¨Ïò§Îäî Ï§ë-%.1lfsec,%llunote", clocks2, note);
+								sprintf(t, "∫“∑Øø¿¥¬ ¡ﬂ-%.1lfsec,%llunote", clocks2, note);
 							else
 								sprintf(t, "Loading - %.1lf sec,%llunote", clocks2, note);
 
@@ -4459,16 +4451,16 @@ inline void CCubeView::DrawScene(void)
 
 
 							if (kj768 == true)
-								sprintf(t, "Î≥ÄÌôò ÏÜçÎèÑ %.1lfx               ", (clocks2 - clocks));
+								sprintf(t, "∫Ø»Ø º”µµ %.1lfx               ", (clocks2 - clocks));
 							else
 								sprintf(t, "Convert Speed %.1lfx               ", (clocks2 - clocks));
 
 
 							dc.TextOut(0, 0 + 20 * (stringcount + 1), t);
 							if (kj768 == true)
-								sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 -Î∂àÎü¨Ïò§Îäî Ï§ë:%.1lfx", (clocks2 - clocks));
+								sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 -∫“∑Øø¿¥¬ ¡ﬂ:%.1lfx", (clocks2 - clocks));
 							else
-								sprintf(t, "hyon's midi player v5.0 -Loading:%.1lfx", (clocks2 - clocks));
+								sprintf(t, "hyon's midi player v5.1 -Loading:%.1lfx", (clocks2 - clocks));
 							clocks = clocks2;
 							GetParent()->SetWindowTextA(t);
 							mode = 10;
@@ -4780,7 +4772,8 @@ inline void CCubeView::DrawScene(void)
 
 				}
 			}
-			else if (onelp == 1) onelp = 0;
+			else if (onelp !=0) onelp ++;
+			if (onelp == 3) onelp = 0;
 			//printf("B");
 			if (owptr6 < 24 * 2 && !midiout) {
 				//printf("!");
@@ -4800,7 +4793,7 @@ inline void CCubeView::DrawScene(void)
 
 				thread1 = CreateThread(NULL, 0, playmidi, &thread1d, 0, &thread1e);
 				clock2_init();
-				system("cls");
+				//system("cls");
 
 				ii += clock() - gtc;
 				oplaymidii = 0;
@@ -4913,17 +4906,17 @@ inline void CCubeView::DrawScene(void)
 			if (lt == 0) {
 				if (tsb7[0] != 0) {
 					if (kj768 == true)
-						sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 -%s/%dfps/%s/%s", midname, fps, midstr, tsb7);
+						sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 -%s/%dfps/%s/%s", midname, fps, midstr, tsb7);
 					else
-						sprintf(t, "hyon's midi player v5.0 -%s/%dfps/%s/%s", midname, fps, midstr, tsb7);
+						sprintf(t, "hyon's midi player v5.1 -%s/%dfps/%s/%s", midname, fps, midstr, tsb7);
 
 				}
 				else {
 					//////printf("%x", tsb7[0]);
 					if (kj768 == true)
-						sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 -%s/%dfps/%s", midname, fps, midstr);
+						sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 -%s/%dfps/%s", midname, fps, midstr);
 					else
-						sprintf(t, "hyon's midi player v5.0 -%s/%dfps/%s", midname, fps, midstr);
+						sprintf(t, "hyon's midi player v5.1 -%s/%dfps/%s", midname, fps, midstr);
 				}
 				GetParent()->SetWindowTextA(t);
 
@@ -5016,7 +5009,7 @@ inline void CCubeView::DrawScene(void)
 						////printf("%d",waveOutClose(hWaveOut) == MMSYSERR_NOERROR);
 					}
 
-					// Î©îÎ™®Î¶¨ Ìï†Îãπ Ìï¥Ï†ú
+					// ∏ﬁ∏∏Æ «“¥Á «ÿ¡¶
 
 					//alDeleteBuffers(1, &ibuffer);
 					//alDeleteSources(1, &isource);
@@ -6068,10 +6061,10 @@ inline void CCubeView::DrawScene(void)
 		//("%d ", mode);
 	T:
 		;
-		UpdateData(0);
+		
 	}
 T2:
-	;
+	UpdateData(0);
 
 }
 BOOL CCubeView::OnEraseBkgnd(CDC* /*pDC*/)
@@ -6252,7 +6245,7 @@ BOOL CCubeView::OnHelpInfo(HELPINFO* pHelpInfo)
 }
 BOOL CCubeView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
-	// TODO: Ïó¨Í∏∞Ïóê Î©îÏãúÏßÄ Ï≤òÎ¶¨Í∏∞ ÏΩîÎìúÎ•º Ï∂îÍ∞Ä Î∞è/ÎòêÎäî Í∏∞Î≥∏Í∞íÏùÑ Ìò∏Ï∂úÌï©ÎãàÎã§.
+	// TODO: ø©±‚ø° ∏ﬁΩ√¡ˆ √≥∏Æ±‚ ƒ⁄µÂ∏¶ √ﬂ∞° π◊/∂«¥¬ ±‚∫ª∞™¿ª »£√‚«’¥œ¥Ÿ.
 	if (zDelta > 0) j5jgj *= 1.05;
 	else j5jgj /= 1.05;
 	return CView::OnMouseWheel(nFlags, zDelta, pt);
@@ -6327,7 +6320,7 @@ void CCubeView::OnSizing(UINT fwSide, LPRECT pRect)
 }
 void CCubeView::OnMButtonDblClk(UINT nFlags, CPoint point)
 {
-	// TODO: Ïó¨Í∏∞Ïóê Î©îÏãúÏßÄ Ï≤òÎ¶¨Í∏∞ ÏΩîÎìúÎ•º Ï∂îÍ∞Ä Î∞è/ÎòêÎäî Í∏∞Î≥∏Í∞íÏùÑ Ìò∏Ï∂úÌï©ÎãàÎã§.
+	// TODO: ø©±‚ø° ∏ﬁΩ√¡ˆ √≥∏Æ±‚ ƒ⁄µÂ∏¶ √ﬂ∞° π◊/∂«¥¬ ±‚∫ª∞™¿ª »£√‚«’¥œ¥Ÿ.
 	tr = or ; tg = og;
 	CRect rct;
 	GetClientRect(rct);
@@ -6344,7 +6337,7 @@ void CCubeView::OnFileOpen32773()
 		"MIDI FILES(*.mid)|*.mid|All Files(*.*)|*.*||");
 	CString strPathName;
 	CString strFileList;
-	const int c_cMaxFiles = 400 /*ÏÑ†ÌÉùÌï† ÌååÏùº Ïà´Ïûê*/;	// Î©îÎ™®Î¶¨ Î∂ÄÏ°±ÌòÑÏÉÅÏúºÎ°ú ÌôïÏû• ÏïàÌï¥Ï£ºÎ©¥ Î™áÍ∞ú Î™ªÏîÄ
+	const int c_cMaxFiles = 400 /*º±≈√«“ ∆ƒ¿œ º˝¿⁄*/;	// ∏ﬁ∏∏Æ ∫Œ¡∑«ˆªÛ¿∏∑Œ »Æ¿Â æ»«ÿ¡÷∏È ∏Ó∞≥ ∏¯æ∏
 	const int c_cbBuffSize = (c_cMaxFiles * (MAX_PATH + 1)) + 1;
 	dlg.GetOFN().lpstrFile = strFileList.GetBuffer(c_cbBuffSize);
 	dlg.GetOFN().nMaxFile = c_cbBuffSize;
@@ -6396,7 +6389,7 @@ void CCubeView::OnViewSetbackgroundimage()
 void CCubeView::OnViewLoadsoundfont()
 {
 	
-	st.Create(IDD_settings);
+	
 	st.ShowWindow(SW_SHOW);
 }
 void CCubeView::OnRecent11()
@@ -6493,7 +6486,6 @@ void CCubeView::OnFileReset()
 void CCubeView::OnSettingsViewsettings()
 {
 	
-	st2.Create(IDD_viewsettings);
 	st2.ShowWindow(SW_SHOW);
 }
 void CCubeView::OnPlayPause()
@@ -6516,9 +6508,9 @@ void CCubeView::OnPlayPitchdown()
 	}
 	pitch[9] = 100.;
 	if (kj768 == true)
-		sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 - ÏùåÎÜíÏù¥ -1");
+		sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 - ¿Ω≥Ù¿Ã -1");
 	else
-		sprintf(t, "hyon's midi player v5.0 - pitch -1");
+		sprintf(t, "hyon's midi player v5.1 - pitch -1");
 
 	GetParent()->SetWindowTextA(t);
 }
@@ -6533,9 +6525,9 @@ void CCubeView::OnPlayPitchup()
 	}
 	pitch[9] = 100.;
 	if (kj768 == true)
-		sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 - ÏùåÎÜíÏù¥ +1");
+		sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 - ¿Ω≥Ù¿Ã +1");
 	else
-		sprintf(t, "hyon's midi player v5.0 - pitch +1");
+		sprintf(t, "hyon's midi player v5.1 - pitch +1");
 
 	GetParent()->SetWindowTextA(t);
 }
@@ -6597,9 +6589,9 @@ void CCubeView::OnPlaySkipback()
 			playmidin0 += 200 * 50;
 			//if (playoffset < 0) playoffset = 0;
 			if (kj768 == true)
-				sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 -Ïò§ÌîÑÏÖã %.2lfÏ¥à", (float)playoffset / 20, '%');
+				sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 -ø¿«¡º¬ %.2lf√ ", (float)playoffset / 20, '%');
 			else
-				sprintf(t, "hyon's midi player v5.0 -offset %.2lfsec", (float)playoffset / 20, '%');
+				sprintf(t, "hyon's midi player v5.1 -offset %.2lfsec", (float)playoffset / 20, '%');
 
 			GetParent()->SetWindowTextA(t);
 			mtinit2();
@@ -6630,9 +6622,9 @@ void CCubeView::OnPlaySkipforward()
 			playmidin0 -= 200 * 50;
 			printf("R");
 			if (kj768 == true)
-				sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 -Ïò§ÌîÑÏÖã %.2lfÏ¥à", (float)playoffset / 20, '%');
+				sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 -ø¿«¡º¬ %.2lf√ ", (float)playoffset / 20, '%');
 			else
-				sprintf(t, "hyon's midi player v5.0 -offset %.2lfsec", (float)playoffset / 20, '%');
+				sprintf(t, "hyon's midi player v5.1 -offset %.2lfsec", (float)playoffset / 20, '%');
 			printf("S");
 			GetParent()->SetWindowTextA(t);
 			mtinit2();
@@ -6652,9 +6644,9 @@ void CCubeView::OnPlaySpeeddown()
 	SetTimer(1, (int)(17. / (spd / 100.)), 0);
 	//SetTimer(1, playspeed / 5 * 2, 0);
 	if (kj768 == true)
-		sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 -Ïû¨ÏÉù ÏÜçÎèÑ %d%c", (int)(spd), '%');
+		sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 -¿Áª˝ º”µµ %d%c", (int)(spd), '%');
 	else
-		sprintf(t, "hyon's midi player v5.0 -speed %d%c", (int)spd, '%');
+		sprintf(t, "hyon's midi player v5.1 -speed %d%c", (int)spd, '%');
 	GetParent()->SetWindowTextA(t);
 	UpdateData(0);
 
@@ -6670,9 +6662,9 @@ void CCubeView::OnPlaySpeedup()
 	KillTimer(1);
 	SetTimer(1, (int)(17. / (spd / 100.)), 0);
 	if (kj768 == true)
-		sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 -Ïû¨ÏÉù ÏÜçÎèÑ %d%c", (int)(spd), '%');
+		sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 -¿Áª˝ º”µµ %d%c", (int)(spd), '%');
 	else
-		sprintf(t, "hyon's midi player v5.0 -speed %d%c", (int)spd, '%');
+		sprintf(t, "hyon's midi player v5.1 -speed %d%c", (int)spd, '%');
 	GetParent()->SetWindowTextA(t);
 	UpdateData(0);
 	//SetTimer(1, playspeed / 5 * 2, 0);
@@ -6726,9 +6718,9 @@ void CCubeView::OnPlayVolumedown()
 	midiOutSetVolume(playmidiout, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
 	//alSourcef(isource, AL_GAIN, playvolume);
 	if (kj768 == true)
-		sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 - ÏÜåÎ¶¨ ÌÅ¨Í∏∞ %d%c", (int)(playvolume * 100), '%');
+		sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 - º“∏Æ ≈©±‚ %d%c", (int)(playvolume * 100), '%');
 	else
-		sprintf(t, "hyon's midi player v5.0 - volume %d%c", (int)(playvolume * 100), '%');
+		sprintf(t, "hyon's midi player v5.1 - volume %d%c", (int)(playvolume * 100), '%');
 	GetParent()->SetWindowTextA(t);
 }
 void CCubeView::OnPlayVolumeup()
@@ -6740,9 +6732,9 @@ void CCubeView::OnPlayVolumeup()
 	midiOutSetVolume(playmidiout, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
 	//alSourcef(isource, AL_GAIN, playvolume);
 	if (kj768 == true)
-		sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 - ÏÜåÎ¶¨ ÌÅ¨Í∏∞ %d%c", (int)(playvolume * 100), '%');
+		sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 - º“∏Æ ≈©±‚ %d%c", (int)(playvolume * 100), '%');
 	else
-		sprintf(t, "hyon's midi player v5.0 - volume %d%c", (int)(playvolume * 100), '%');
+		sprintf(t, "hyon's midi player v5.1 - volume %d%c", (int)(playvolume * 100), '%');
 	GetParent()->SetWindowTextA(t);
 }
 void CCubeView::OnPlayReset()
@@ -6757,9 +6749,9 @@ void CCubeView::OnPlayReset()
 	}
 	bpshf = 0;
 	if (kj768 == true)
-		sprintf(t, "ÌïòÏù¥Ïò®Ïùò ÎØ∏Îîî ÌîåÎ†àÏù¥Ïñ¥ v5.0 -ÏÜçÎèÑ 100%c,ÏÜåÎ¶¨ ÌÅ¨Í∏∞ 100%c", '%', '%');
+		sprintf(t, "«œ¿Ãø¬¿« πÃµ «√∑π¿ÃæÓ v5.1 -º”µµ 100%c,º“∏Æ ≈©±‚ 100%c", '%', '%');
 	else
-		sprintf(t, "hyon's midi player v5.0 -speed 100%c,volume 100%c", '%', '%');
+		sprintf(t, "hyon's midi player v5.1 -speed 100%c,volume 100%c", '%', '%');
 	GetParent()->SetWindowTextA(t);
 	if (midiout)waveOutSetPosition(playoffset * 50);
 	else {
@@ -6772,7 +6764,7 @@ void CCubeView::OnPlayReset()
 void CCubeView::OnPlayPitchspeed()
 {
 	
-	st3.Create(IDD_DIALOG1);
+	
 	st3.ShowWindow(SW_SHOW);
 }
 void CCubeView::OnHelpViewreadme()
@@ -6830,7 +6822,7 @@ void CCubeView::OnMove(int x, int y)
 		putini();
 	}
 	UpdateData(0);
-	// TODO: Ïó¨Í∏∞Ïóê Î©îÏãúÏßÄ Ï≤òÎ¶¨Í∏∞ ÏΩîÎìúÎ•º Ï∂îÍ∞ÄÌï©ÎãàÎã§.
+	// TODO: ø©±‚ø° ∏ﬁΩ√¡ˆ √≥∏Æ±‚ ƒ⁄µÂ∏¶ √ﬂ∞°«’¥œ¥Ÿ.
 }
 void CCubeView::OnMoving(UINT fwSide, LPRECT pRect)
 {
@@ -6849,5 +6841,6 @@ void CCubeView::OnMoving(UINT fwSide, LPRECT pRect)
 		putini();
 	}
 	UpdateData(0);
-	// TODO: Ïó¨Í∏∞Ïóê Î©îÏãúÏßÄ Ï≤òÎ¶¨Í∏∞ ÏΩîÎìúÎ•º Ï∂îÍ∞ÄÌï©ÎãàÎã§.
+	// TODO: ø©±‚ø° ∏ﬁΩ√¡ˆ √≥∏Æ±‚ ƒ⁄µÂ∏¶ √ﬂ∞°«’¥œ¥Ÿ.
 }
+

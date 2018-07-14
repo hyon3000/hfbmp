@@ -146,6 +146,9 @@ public:
 	afx_msg void OnFileUninstall();
 	afx_msg void OnMove(int x, int y);
 	afx_msg void OnMoving(UINT fwSide, LPRECT pRect);
+protected:
+//	afx_msg LRESULT a(WPARAM wParam, LPARAM lParam);
+	afx_msg LRESULT OnA(WPARAM wParam, LPARAM lParam);
 };
 
 #ifndef _DEBUG  // debug version in cubeview.cpp

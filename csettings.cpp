@@ -76,9 +76,9 @@ void csettings::DoDataExchange(CDataExchange* pDX)
 			stemp = _T("조율방식");
 			vmode = _T("화면 모드");
 
-			btners.SetWindowText("지우기");
-			btnldsf.SetWindowText("불러오기");
-			btncc.SetWindowText("닫기");
+			GetDlgItem(IDC_erase)->SetWindowText("지우기");
+			GetDlgItem(IDC_loadsf)->SetWindowText("불러오기");
+			GetDlgItem(IDCANCEL)->SetWindowText("닫기");
 			GetDlgItem(IDC_equal)->SetWindowText("평균율");
 			GetDlgItem(IDC_pyt)->SetWindowText("피타고라스 음율");
 			GetDlgItem(IDC_just)->SetWindowText("순정률");

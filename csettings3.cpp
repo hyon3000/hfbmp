@@ -6,6 +6,7 @@
 #include "csettings3.h"
 #include "afxdialogex.h"
 #include "extern.h"
+
 int vchn = -1, pchn = -1,vbchn=-1,vmchn=-1,vtchn=-1,ichn=-1,mchn=-1,rchn=-1,bchn=-1,cchn=-1;
 // csettings3 대화 상자입니다.
 bool qq = 0;
@@ -161,6 +162,8 @@ BEGIN_MESSAGE_MAP(csettings3, CDialogEx)
 //	ON_BN_CLICKED(IDC_SND, &csettings3::OnClickedSnd)
 	ON_CBN_KILLFOCUS(IDC_COMBO2, &csettings3::OnKillfocusCombo2)
 //	ON_BN_CLICKED(IDC_CHECK3, &csettings3::OnBnClickedCheck3)
+ON_BN_CLICKED(IDC_BUTTON2, &csettings3::OnClickedButton2)
+ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -513,8 +516,8 @@ void csettings3::OnShowWindow(BOOL bShow, UINT nStatus)
 	GetDlgItem(IDC_d1_vcup_trib)->EnableWindow(!g3446 && !midiout || g3446&&midiout);
 	GetDlgItem(IDC_d1_vcdw_trib)->EnableWindow(!g3446 && !midiout || g3446&&midiout);
 	GetDlgItem(IDC_d1_vvtrib)->EnableWindow(!g3446 && !midiout || g3446&&midiout);
-	GetDlgItem(IDC_SLIDER1)->EnableWindow(!g3446);
-	GetDlgItem(IDC_d1_sc2)->EnableWindow(!g3446);
+	GetDlgItem(IDC_SLIDER1)->EnableWindow(!g3446&&owptr6 > 24 * 2);
+	GetDlgItem(IDC_d1_sc2)->EnableWindow(!g3446&&owptr6 > 24 * 2);
 //	GetDlgItem(IDC_ev1)->EnableWindow(!g3446 && !midiout);
 //	GetDlgItem(IDC_ev2)->EnableWindow(!g3446 && !midiout);
 //	GetDlgItem(IDC_ev3)->EnableWindow(!g3446 && !midiout);
@@ -571,7 +574,7 @@ int csettings3::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CDialogEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
-	SetTimer(1, 45, 0);
+	//SetTimer(2, 45, 0);
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
 
 	return 0;
@@ -755,6 +758,8 @@ void csettings3::OnTimer(UINT_PTR nIDEvent)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (mode == 14)OnCancel();
 	UpdateData(1);
+		GetDlgItem(IDC_SLIDER1)->EnableWindow(!g3446&&owptr6 > 24 * 2);
+	GetDlgItem(IDC_d1_sc2)->EnableWindow(!g3446&&owptr6 > 24 * 2);
 	char p[50];
 	if (GetFocus()->GetDlgCtrlID() != IDC_d1_pv) {
 		if (pchn >= 0) {
@@ -814,10 +819,12 @@ void csettings3::OnTimer(UINT_PTR nIDEvent)
 	if (GetFocus()->GetDlgCtrlID() != IDC_SLIDER1) {
 		
 			sldrctrl.SetRange(0, playlength / 5);
-			sldrctrl.SetRangeMin(0); sldrctrl.SetRangeMax(playlength / 5);
-
+			//sldrctrl.SetRangeMin(0); sldrctrl.SetRangeMax(playlength / 5);
+			//Sleep(1);
+			sldrctrl.SetPos(playoffset);
+			printf("????????????????????%lld %lld\n", playoffset, playlength);
 		
-		sldrctrl.SetPos(playoffset);
+		
 	}
 	UpdateData(0);
 	CDialogEx::OnTimer(nIDEvent);
@@ -1485,3 +1492,30 @@ void csettings3::OnKillfocusCombo2()
 }
 
 
+
+
+void csettings3::OnClickedButton2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	ab = 1;
+	DestroyWindow();
+	
+}
+
+
+void csettings3::OnDestroy()
+{
+	
+
+	CDialogEx::OnDestroy();
+	//delete this;
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+}
+
+
+BOOL csettings3::DestroyWindow()
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	
+	return CDialogEx::DestroyWindow();
+}

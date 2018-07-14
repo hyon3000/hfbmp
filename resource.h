@@ -184,6 +184,7 @@
 #define IDC_oks                         1102
 #define IDC_d1_ccdw                     1103
 #define IDC_d1_cv                       1104
+#define IDC_BUTTON2                     1106
 #define ID_FILE_PLAY                    32772
 #define ID_FILE_OPEN32773               32773
 #define ID_HELP_VIEWREADME              32774
@@ -244,7 +245,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        149
 #define _APS_NEXT_COMMAND_VALUE         32836
-#define _APS_NEXT_CONTROL_VALUE         1106
+#define _APS_NEXT_CONTROL_VALUE         1107
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

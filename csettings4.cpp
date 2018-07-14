@@ -41,7 +41,8 @@ int csettings4::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CDialogEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
-	ht = f2f23;
+	if (kj768 == true)ht = f2f23;
+	else ht = f2f24;
 	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
 
 	return 0;

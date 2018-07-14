@@ -130,4 +130,7 @@ public:
 	afx_msg void OnKillfocusCombo2();
 	CComboBox _civ;
 
+	afx_msg void OnClickedButton2();
+	afx_msg void OnDestroy();
+	virtual BOOL DestroyWindow();
 };
