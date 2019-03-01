@@ -98,6 +98,55 @@ struct wavChunk
 union int642char { unsigned long long i = 0; char c[8]; };
 union int2char { unsigned int i = 0; char c[4]; };
 union _playmidit { unsigned char bf[4]; int me; };
+
+	char mdtmpvel[2048];
+	char mdtmpvel8[2048];
+	char mdtmpoff[2048];
+	char mdtmpwrite[12288];
+	int mdtmpsize;
+
+	void mdtmpreset() {
+		mdtmpsize = 0;
+		memset(mdtmpvel, 0, 2048);
+		memset(mdtmpvel8, 0, 2048);
+		memset(mdtmpoff, 0, 2048);
+	}
+	
+	void mdtmpsort() {
+		
+		mdtmpsize = 0;
+		for (int i = 0; i < 2048; i++) {
+			if (mdtmpvel[i] > 80) {
+				mdtmpwrite[mdtmpsize++] = mdtmpvel8[i] + (i >> 7);
+				mdtmpwrite[mdtmpsize++] = (i & 127);
+				mdtmpwrite[mdtmpsize++] = mdtmpvel[i];
+			}
+		}
+		for (int i = 0; i < 2048; i++) {
+			if (mdtmpvel[i] > 40&&80>= mdtmpvel[i]) {
+				mdtmpwrite[mdtmpsize++] = mdtmpvel8[i] + (i >> 7);
+				mdtmpwrite[mdtmpsize++] = (i & 127);
+				mdtmpwrite[mdtmpsize++] = mdtmpvel[i];
+			}
+		}
+		for (int i = 0; i < 2048; i++) {
+			if ( 40 >= mdtmpvel[i] && mdtmpvel[i]) {
+				mdtmpwrite[mdtmpsize++] = mdtmpvel8[i] + (i >> 7);
+				mdtmpwrite[mdtmpsize++] = (i & 127);
+				mdtmpwrite[mdtmpsize++] = mdtmpvel[i];
+			}
+		}
+		for (int i = 0; i < 2048; i++) {
+			if (mdtmpoff[i]) {
+				mdtmpwrite[mdtmpsize++] = mdtmpoff[i] + (i >> 7);
+				mdtmpwrite[mdtmpsize++] = (i & 127);
+				mdtmpwrite[mdtmpsize++] = 0;
+			}
+		}
+		
+
+	}
+
 class AUX_RGBImageRec {
 
 	void convertBGRtoRGB()
@@ -174,7 +223,8 @@ csettings4 st4;
 int2char wjct2;
 chbuf *chbuffer;
 FILE *wj, *wj2, *wj3, *wj6, *wj7, *i, *wj4, *ch, *lrcf, *playmidif, *playmidig;
-
+int fp2;
+char afqwfq[384] = { 0 };
 bool ab=0,bt, gtmp, gmea, mov, dbc, lrcb, ps, fs, skip, ppmy, txtoff, playrd100t, playrd100t2, *buf, keysig2, stop, damppad[16], softpad[16], sti3, stop2, g3446 = true, atmod, wjaa, updta, vol, strclrc, ply = true, f, fnm, pb, quit, htit, mmp, forcenomidi, sdfsdf, exbl;
 char t[10000], tsb1[10000], tsb[10000], tsb2[10000], tsb3[10000], tsb4[10000], tsb6[10000], tsb5[10000], tsb8[1025], tsb9[400], *buffer, opbuf[8000], mdstrings[2000], chrinp[100], ktemp[1056], ktt, lrcc1[2000], lrcc2[2000], lrcc3[2000], tsb7[10000], argv[1000], tj[1000], imgname[1000], mdt[500][268][16], p[100], *midname, *midname2, str[10000], midstr[1000], otsb2[1000], tsb0[1000];
 short pc2[16], *key5[128], stm, midipan;
@@ -184,9 +234,9 @@ long gtc, ldpdt, oldpdt, doldpdt, playrd100, modulationwheel[16], fmodulationwhe
 unsigned long thread1d, thread1e, clock_start;
 float glbuffer[8][2008][3], *glbt, h45h7 , gasfw , hg4h5, stretchx = 1.0f, stretchy = 1.0f, stretchz = 1.0f, x , y, turfreq = 440, strclr[4], j5jgj = 1, or , og, tr = 0.5, tg = 0.5, tb = 0.5, ta = 1, mdtpnt3, upbl = 0.1, dwbl = 0.3, erhwh[16], iyybt[16], trity[16], sadae[16], erhwhw2[16][8], iyybts2[16][8], trityu2[16][8];
 long long offs2, lrct3, lrct4, midisize, pnote, wptr, owptr4, owptr5, mptr, *le, *le2, *chlnt, *fileptr, nplayoffset, playoffset, onp1;
-unsigned long long oplaymidii, gmeo, gmeaptr, gmeaptr2, lud, playmidin0, playlength, wj6startpos2, playmidii, playmidij, playmidini, playmidinj, note, owptr2;
+unsigned long long oplaymidii, gmeo,   lud, playmidin0, playlength, wj6startpos2, playmidii, playmidij, playmidini, playmidinj, note, owptr2;
 double lrct1, lrct2, _clock2, clocks, clocks2, f346h = 1., playvolume = 1.0f, pitcherror[16][128], chvol[16], key[128][16], dchorus[16], dreverb[16], rmodulationwheel[16], volume2[16], spd = 100, loop = 0., pitch[16], rpitch[16], pc3[16], dwp, mdvol2[3][16], mdvol3[128][16], dplayrate, pitcherr[128][16], pdt, dpdt, wjct, wjcid2[128], wjca;
-
+volatile unsigned long long gmeaptr, gmeaptr2;
 AUX_RGBImageRec *auxDIBImageLoad(const char *FileName)
 {
 	return new AUX_RGBImageRec(FileName);
@@ -859,7 +909,7 @@ inline void noteon(int wyr, int vel, int chennel, int midichennel) {
 	note++;
 	//pkey4[wyr][midichennel]++;
 	setnote(midichennel, wyr, vel, (double)vel / 128.*mdvol3[wyr][midichennel]);
-
+	//setnote(midichennel, wyr, vel, (double)vel / 128.);
 	key3[wyr][midichennel] = ((chennel & 7) != 0) ? (chennel & 7) : 7;
 
 
@@ -875,6 +925,7 @@ inline void noteon2(int wyr, int midichennel) {
 
 
 }
+
 inline void getmidieventacc() {
 
 	for (int j = 0; j < chn; j++) {
@@ -1756,17 +1807,26 @@ inline void getmidieventacc1() {
 
 				gmea = 1;
 				if (gmeo != (wptr * 1000ll / (unsigned long long)playrate)) {
+					mdtmpsort();
+					fwrite(mdtmpwrite, 1, mdtmpsize, wj);
+					mdtmpreset();
 					gmeo = (wptr * 1000ll / (unsigned long long)playrate);
 
 					gmeaptr2 = _ftelli64(wj);
 					_fseeki64(wj, gmeaptr - 8, SEEK_SET);
-					fwrite(&gmeaptr2, 8, 1, wj);
+					fwrite((const void*)&gmeaptr2, 8, 1, wj);
+					
+					
 					_fseeki64(wj, 0, SEEK_END);
 
 					fwrite(&gmeo, 8, 1, wj);
 
 					fwrite(&gmeo, 8, 1, wj);
+					
+					
 					gmeaptr = _ftelli64(wj);
+					
+					_fseeki64(wj, 0, SEEK_END);
 					if (lud != gmeo / 300) {
 
 						lud = gmeo / 300;
@@ -1795,7 +1855,9 @@ inline void getmidieventacc1() {
 
 						}
 					}
-
+					
+					
+					mdtmpreset();
 				}
 
 				//printf("GG");
@@ -1816,9 +1878,19 @@ inline void getmidieventacc1() {
 				c = sjgf(ch, j);
 				if (keysust[b][gmetmp2] == 0) noteoff(b, gmetmp2);
 				else noteon2(b, gmetmp2);
-				fwrite(&tmp, 1, 1, wj);
-				fwrite(&b, 1, 1, wj);
-				fwrite(&c, 1, 1, wj);
+				
+				tmp -= 0x80;
+				if (c == 0) {
+
+					mdtmpoff[(tmp << 7) + b] = 0x80;
+				}
+				else {
+					if (mdtmpvel[(tmp << 7) + b] < c) {
+						mdtmpvel[(tmp << 7) + b] = c;
+						mdtmpvel8[(tmp << 7) + b] = 0x80;
+					}
+				}
+				
 			}
 			else if (tmp >= 0x90 && tmp <= 0x9F) {
 				oldstate[j] = tmp;
@@ -1828,9 +1900,17 @@ inline void getmidieventacc1() {
 				else if (damppad[gmetmp2] || keysust[b][gmetmp2] == 1)
 					noteon2(b, gmetmp2);
 				else noteoff(b, gmetmp2);
-				fwrite(&tmp, 1, 1, wj);
-				fwrite(&b, 1, 1, wj);
-				fwrite(&c, 1, 1, wj);
+				tmp -= 0x90;
+				if (c == 0) {
+
+					mdtmpoff[(tmp << 7) + b] = 0x90;
+				}
+				else {
+					if (mdtmpvel[(tmp << 7) + b] < c) {
+						mdtmpvel[(tmp << 7) + b] = c;
+						mdtmpvel8[(tmp << 7) + b] = 0x90;
+					}
+				}
 			}
 			else if (tmp >= 0xF0 && tmp <= 0xFE) {
 				if (tmp == 0xF0) {
@@ -2106,9 +2186,17 @@ inline void getmidieventacc1() {
 						c = sjgf(ch, j);
 						if (keysust[b][gmetmp2] == 0) noteoff(b, gmetmp2);
 						else noteon2(b, gmetmp2);
-						fwrite(&tmp, 1, 1, wj);
-						fwrite(&b, 1, 1, wj);
-						fwrite(&c, 1, 1, wj);
+						tmp -= 0x80;
+						if (c == 0) {
+
+							mdtmpoff[(tmp << 7) + b] = 0x80;
+						}
+						else {
+							if (mdtmpvel[(tmp << 7) + b] < c) {
+								mdtmpvel[(tmp << 7) + b] = c;
+								mdtmpvel8[(tmp << 7) + b] = 0x80;
+							}
+						}
 					}
 					else if (tmp >= 0x90 && tmp <= 0x9F) {
 						oldstate[j] = tmp;
@@ -2118,9 +2206,17 @@ inline void getmidieventacc1() {
 						else if (damppad[gmetmp2] || keysust[b][gmetmp2] == 1)
 							noteon2(b, gmetmp2);
 						else noteoff(b, gmetmp2);
-						fwrite(&tmp, 1, 1, wj);
-						fwrite(&b, 1, 1, wj);
-						fwrite(&c, 1, 1, wj);
+						tmp -= 0x90;
+						if (c == 0) {
+
+							mdtmpoff[(tmp << 7) + b] = 0x90;
+						}
+						else {
+							if (mdtmpvel[(tmp << 7) + b] < c) {
+								mdtmpvel[(tmp << 7) + b] = c;
+								mdtmpvel8[(tmp << 7) + b] = 0x90;
+							}
+						}
 					}
 					else if (tmp >= 0xF0 && tmp <= 0xFE) {
 						if (tmp == 0xF0) {
@@ -2407,7 +2503,7 @@ inline void getmidieventacc1() {
 
 }
 inline void getmidievent21() {
-	
+	mdtmpreset();
 	gmea = 0;
 	//("!", pnotes);
 	//system("pause");
@@ -2451,9 +2547,17 @@ inline void getmidievent21() {
 						c = sjgf(ch, j);
 						if (keysust[b][gmetmp2] == 0) noteoff(b, gmetmp2);
 						else noteon2(b, gmetmp2);
-						fwrite(&tmp, 1, 1, wj);
-						fwrite(&b, 1, 1, wj);
-						fwrite(&c, 1, 1, wj);
+						tmp -= 0x80;
+						if (c == 0) {
+
+							mdtmpoff[(tmp << 7) + b] = 0x80;
+						}
+						else {
+							if (mdtmpvel[(tmp << 7) + b] < c) {
+								mdtmpvel[(tmp << 7) + b] = c;
+								mdtmpvel8[(tmp << 7) + b] = 0x80;
+							}
+						}
 					}
 					else if (tmp >= 0x90 && tmp <= 0x9F) {
 						oldstate[j] = tmp;
@@ -2463,9 +2567,17 @@ inline void getmidievent21() {
 						else if (damppad[gmetmp2] || keysust[b][gmetmp2] == 1)
 							noteon2(b, gmetmp2);
 						else noteoff(b, gmetmp2);
-						fwrite(&tmp, 1, 1, wj);
-						fwrite(&b, 1, 1, wj);
-						fwrite(&c, 1, 1, wj);
+						tmp -= 0x90;
+						if (c == 0) {
+
+							mdtmpoff[(tmp << 7) + b] = 0x90;
+						}
+						else {
+							if (mdtmpvel[(tmp << 7) + b] < c) {
+								mdtmpvel[(tmp << 7) + b] = c;
+								mdtmpvel8[(tmp << 7) + b] = 0x90;
+							}
+						}
 					}
 					else if (tmp >= 0xF0 && tmp <= 0xFE) {
 						if (tmp == 0xF0) {
@@ -2777,6 +2889,11 @@ inline int clock2_save() {
 inline int clock2() {
 	return (int)(_clock2 + (spd / 100.*(double)(clock() - clock_start)));
 }
+inline void MOSM(HMIDIOUT hmo,DWORD dwMsg) {
+	//while
+		(midiOutShortMsg(hmo, dwMsg) != MMSYSERR_NOERROR);
+
+}
 DWORD WINAPI playmidi(LPVOID unused)
 {
 	//MessageBox(0, "A", "A", MB_OK);
@@ -2786,12 +2903,13 @@ DWORD WINAPI playmidi(LPVOID unused)
 	unsigned char k;
 	short a, b;
 	int vt;
+	_playmidit playt;
 	ro = 0;
 	playmidif = fopen(tsb0, "rb");
 	playmidig = fopen(tsb0, "rb");
 	midiOutOpen(&playmidiout, 0, 0, 0, CALLBACK_NULL);
 	Sleep(1);
-	midiOutSetVolume(playmidiout, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
+	midiOutSetVolume(playmidiout, (int)(playvolume * 65535.) + ((int)(playvolume * 65535.) << 16));
 	unsigned long long len;
 	playmidii = 0;
 	playmidin0 = clock2();
@@ -2817,7 +2935,7 @@ DWORD WINAPI playmidi(LPVOID unused)
 			for (int i = 0; i < 16; i++) {
 				ipaused[i] = 1, bpaused[i] = 1, mpaused[i] = 1, cpaused[i] = 1, rpaused[i] = 1;
 				if (bpaused[i] == 1) {
-					midiOutShortMsg(playmidiout, 0x000000B0 + i + (fmbank[i] << 16));
+					MOSM(playmidiout, 0x000000B0 + i + (fmbank[i] << 16));
 					printf("& %x", 0x000000B0 + i + (fmbank[i] << 16));
 					bpaused[i] = 0;
 				}
@@ -2826,14 +2944,14 @@ DWORD WINAPI playmidi(LPVOID unused)
 		if (ro) {
 			ro = 0;
 			//	for (int p = 0; p < 0x10; p++)
-			//midiOutShortMsg(playmidiout, 0x00007BB0 + p);
+			//MOSM(playmidiout, 0x00007BB0 + p);
 			midiOutClose(playmidiout);
 			midiOutOpen(&playmidiout, 0, 0, 0, CALLBACK_NULL);
 			Sleep(1);
 			for (int i = 0; i < 16; i++) {
 				ipaused[i] = 1, bpaused[i] = 1, mpaused[i] = 1, cpaused[i] = 1, rpaused[i] = 1;
 				if (bpaused[i] == 1) {
-					midiOutShortMsg(playmidiout, 0x000000B0 + i + (fmbank[i] << 16));
+					MOSM(playmidiout, 0x000000B0 + i + (fmbank[i] << 16));
 					printf("& %x", 0x000000B0 + i + (fmbank[i] << 16));
 					bpaused[i] = 0;
 				}
@@ -2845,17 +2963,17 @@ DWORD WINAPI playmidi(LPVOID unused)
 		fseek(playmidif, playmidinj, SEEK_SET);
 		//printf("!%x %llx %llx\n", ftell(playmidif), playmidii, playmidij);
 		len = (playmidij - ftell(playmidig)) / 3;
-		k = 0;
+		k = 12;
 		if (oks == 1) {
 			for (a = 0; a<16; a++) if (a != 9) pitchint[a] = pitchint2[a] = (int)(12.*log2(pitch[a] / 100.) + 0.5);
 		}
 		for (int i = 0; i < 16; i++) {
-			midiOutShortMsg(playmidiout, 0x000000C0 + i + (fmpreset[i] << 8));
+			MOSM(playmidiout, 0x000000C0 + i + (fmpreset[i] << 8));
 			if (rpaused[i]) {
 				a = freverb[i] + reverb[i];
 				if (a > 127) a = 127;
 				else if (a < 0)a = 0;
-				midiOutShortMsg(playmidiout, 0x00005BB0 + i + (a << 16));
+				MOSM(playmidiout, 0x00005BB0 + i + (a << 16));
 				rpaused[i] = 0;
 
 			}
@@ -2863,15 +2981,15 @@ DWORD WINAPI playmidi(LPVOID unused)
 				a = fchorus[i] + chorus[i];
 				if (a > 127) a = 127;
 				else if (a < 0)a = 0;
-				midiOutShortMsg(playmidiout, 0x00005DB0 + i + (a << 16));
+				MOSM(playmidiout, 0x00005DB0 + i + (a << 16));
 				cpaused[i] = 0;
 			}
 			if (mpaused[i]) {
 				a = fmodulationwheel[i] + modulationwheel[i];
 				if (a > 16383) a = 16383;
 				else if (a < 0)a = 0;
-				midiOutShortMsg(playmidiout, 0x000001B0 + i + ((a >> 7) << 16));
-				midiOutShortMsg(playmidiout, 0x000021B0 + i + ((a & 127) << 16));
+				MOSM(playmidiout, 0x000001B0 + i + ((a >> 7) << 16));
+				MOSM(playmidiout, 0x000021B0 + i + ((a & 127) << 16));
 
 				mpaused[i] = 0;
 
@@ -2881,6 +2999,7 @@ DWORD WINAPI playmidi(LPVOID unused)
 		while (len--)
 		{
 			if (fread(playmidit.bf, 1, 3, playmidig) < 3) goto Y;
+			playt.me = playmidit.me;
 			if (playmidit.bf[0] >= 0xA0) {
 				if ((playmidit.bf[0] & 0xF0) == 0xB0 && playmidit.bf[1] == 0x06) {
 					a = (playmidit.bf[0] & 0x0F);
@@ -2984,9 +3103,9 @@ DWORD WINAPI playmidi(LPVOID unused)
 					if (ompreset[a] != midipreset[a]) { fmpreset[a] = midipreset[a]; ompreset[a] = midipreset[a]; }
 					playmidit.me = 0;
 					for (int i = 0; i < 16; i++) {
-						midiOutShortMsg(playmidiout, 0x000000C0 + i + (fmpreset[i] << 8));
+						MOSM(playmidiout, 0x000000C0 + i + (fmpreset[i] << 8));
 					}
-					//midiOutShortMsg(playmidiout, 0x000000C0 + a + (fmpreset[a] << 8));
+					//MOSM(playmidiout, 0x000000C0 + a + (fmpreset[a] << 8));
 					//printf("& %d", pbendratio[a]);
 				}
 				if ((playmidit.bf[0] & 0xF0) == 0xB0 && playmidit.bf[1] == 0x00) {
@@ -2996,7 +3115,7 @@ DWORD WINAPI playmidi(LPVOID unused)
 					if (ombank[a] != midibank[a]) { fmbank[a] = midibank[a]; ombank[a] = midibank[a]; }
 					playmidit.me = 0;
 					//ro = 1;
-					//midiOutShortMsg(playmidiout, 0x000000B0 + a + (fmbank[a] << 16));
+					//MOSM(playmidiout, 0x000000B0 + a + (fmbank[a] << 16));
 
 
 				}
@@ -3009,7 +3128,7 @@ DWORD WINAPI playmidi(LPVOID unused)
 					a = freverb[b] + reverb[b];
 					if (a > 127) a = 127;
 					else if (a < 0)a = 0;
-					midiOutShortMsg(playmidiout, 0x00005BB0 + b + (a << 16));
+					MOSM(playmidiout, 0x00005BB0 + b + (a << 16));
 
 
 
@@ -3023,7 +3142,7 @@ DWORD WINAPI playmidi(LPVOID unused)
 					a = fchorus[b] + chorus[b];
 					if (a > 127) a = 127;
 					else if (a < 0)a = 0;
-					midiOutShortMsg(playmidiout, 0x00005DB0 + b + (a << 16));
+					MOSM(playmidiout, 0x00005DB0 + b + (a << 16));
 
 
 
@@ -3038,8 +3157,8 @@ DWORD WINAPI playmidi(LPVOID unused)
 					a = fmodulationwheel[b] + modulationwheel[b];
 					if (a > 16383) a = 16383;
 					else if (a < 0)a = 0;
-					midiOutShortMsg(playmidiout, 0x000001B0 + b + ((a >> 7) << 16));
-					midiOutShortMsg(playmidiout, 0x000021B0 + b + ((a & 127) << 16));
+					MOSM(playmidiout, 0x000001B0 + b + ((a >> 7) << 16));
+					MOSM(playmidiout, 0x000021B0 + b + ((a & 127) << 16));
 
 
 
@@ -3053,13 +3172,13 @@ DWORD WINAPI playmidi(LPVOID unused)
 					a = fmodulationwheel[b] + modulationwheel[b];
 					if (a > 16383) a = 16383;
 					else if (a < 0)a = 0;
-					midiOutShortMsg(playmidiout, 0x000001B0 + b + ((a >> 7) << 16));
-					midiOutShortMsg(playmidiout, 0x000021B0 + b + ((a & 127) << 16));
+					MOSM(playmidiout, 0x000001B0 + b + ((a >> 7) << 16));
+					MOSM(playmidiout, 0x000021B0 + b + ((a & 127) << 16));
 
 
 
 				}
-				if (playmidit.me != 0)midiOutShortMsg(playmidiout, playmidit.me);
+				if (playmidit.me != 0)MOSM(playmidiout, playmidit.me);
 			}
 			else {
 				b = playmidit.bf[0] & 0x0F;
@@ -3072,21 +3191,24 @@ DWORD WINAPI playmidi(LPVOID unused)
 				if (vt < 128 && 0 <= vt) playmidit.bf[2] = vt;
 				else if (vt >= 128) playmidit.bf[2] = 127;
 				else playmidit.bf[2] = 0;
-				midiOutShortMsg(playmidiout, playmidit.me);
+				MOSM(playmidiout, playmidit.me);
 			}
 			//printf("%x %x %x\n", playmidit.bf[0],playmidit.bf[1],playmidit.bf[2]);
 
 			//("~ %x\n", playmidit.me);
 			k++;
-			if (k == 255) {
+			if (k == 16) {
 				k = 0;
-				if (clock() - playmidin0 > playmidini) {
+				unsigned long long t = clock2() - playmidin0;
+				if (t>playmidini + 2 || (t > playmidini && !(playt.bf[0] <= 0x9F && playt.bf[2]<60))) {
 					for (int p = 0; p < 0x10; p++)
-						midiOutShortMsg(playmidiout, 0x00007BB0 + p);
+						MOSM(playmidiout, 0x00007BB0 + p);
 					fseek(playmidig, playmidij, SEEK_SET);
 					break;
 				}
 			}
+			//for(int i=0;i<2;i++)
+			//printf("!");
 		}
 
 		playmidii = playmidini; playmidij = playmidinj;
@@ -3336,7 +3458,7 @@ inline void CCubeView::main2(char *argv2) {
 	onelp = 0;
 	note = 0;
 	spd = 100.;
-	fnm = 0;
+	fnm = 1;
 	printf("%s\n", argv2);
 	onp1 = 0;
 	if (strstr(argv2, "_p_") != 0) {
@@ -3368,7 +3490,7 @@ inline void CCubeView::main2(char *argv2) {
 
 		chorus[i] = 0;
 		dchorus[i] = 0;
-		reverb[i] = 40;
+		reverb[i] = 0;
 		dreverb[i] = 0;
 		fchorus[i] = 0;
 		freverb[i] = 0;
@@ -3439,9 +3561,9 @@ inline void CCubeView::main2(char *argv2) {
 		y = fopen(argv, "rb");
 		if (y == NULL) {
 			if (kj768 == true)
-				MessageBox("에러-파일을 열 수 없음", "하이온의 미디 플레이어 v5.1", MB_OK | MB_ICONSTOP);
+				MessageBox("에러-파일을 열 수 없음", "하이온의 미디 플레이어 v5.4", MB_OK | MB_ICONSTOP);
 			else
-				MessageBox("error-can't open file", "hyon's midi player v5.1", MB_OK | MB_ICONSTOP);
+				MessageBox("error-can't open file", "hyon's midi player v5.4", MB_OK | MB_ICONSTOP);
 			exit(1);
 		}
 		char t[10];
@@ -3450,9 +3572,9 @@ inline void CCubeView::main2(char *argv2) {
 		printf("%s", t);
 		if (strcmp((char*)t, "MThd")) {
 			if (kj768 == true)
-				MessageBox("에러-파일을 열 수 없음", "하이온의 미디 플레이어 v5.1", MB_OK | MB_ICONSTOP);
+				MessageBox("에러-파일을 열 수 없음", "하이온의 미디 플레이어 v5.4", MB_OK | MB_ICONSTOP);
 			else
-				MessageBox("error-can't open file", "hyon's midi player v5.1", MB_OK | MB_ICONSTOP);
+				MessageBox("error-can't open file", "hyon's midi player v5.4", MB_OK | MB_ICONSTOP);
 			exit(1);
 
 		}
@@ -3686,7 +3808,7 @@ M:
 
 	if (chn == 0) {
 		if (kj768 == true) {
-			MessageBox("에러-깨진 미디 파일임", "하이온의 미디 플레이어 v5.1", MB_OK | MB_ICONSTOP); Sleep(1000); if (!midiout) {
+			MessageBox("에러-깨진 미디 파일임", "하이온의 미디 플레이어 v5.4", MB_OK | MB_ICONSTOP); Sleep(1000); if (!midiout) {
 				//	MessageBox("B", "B", MB_OK);
 				//cmidi.Pause();
 				//Sleep(100);
@@ -3709,7 +3831,7 @@ M:
 			}exit2(1);
 		}
 		else {
-			MessageBox("error-broken midi file", "hyon's midi player v5.1", MB_OK | MB_ICONSTOP); Sleep(1000); if (!midiout) {
+			MessageBox("error-broken midi file", "hyon's midi player v5.4", MB_OK | MB_ICONSTOP); Sleep(1000); if (!midiout) {
 				//	MessageBox("B", "B", MB_OK);
 				//cmidi.Pause();
 				TerminateThread(thread1, 0);
@@ -3734,10 +3856,12 @@ M:
 	else if (sdfsdf == 0) {
 		//printf("!");
 		//system("pause");
-		tfnm = 0;
+		tfnm = 1;
+		midiout = 0;
 		st.DoModal();
 		if (midiout) st3.DoModal();
-		if (!midiout&&tfnm) fnm = 1;
+		//if (!midiout&&tfnm) fnm = 1;
+		if (tfnm == 0) fnm = 0;
 		if (quit == true) {
 			if (!midiout) {
 				//	MessageBox("B", "B", MB_OK);
@@ -3797,7 +3921,7 @@ M:
 	}
 	sppmy();
 	if (midiout) wj = fopen(tsb, "wb");
-	else wj = fopen(tsb0, "wb");
+	else wj = fopen(tsb0, "wb+");
 	wj2 = fopen(tsb2, "w");
 	wj3 = fopen(tsb3, "wb");
 	fwrite(&midipan, 2, 1, wj3);
@@ -4166,9 +4290,9 @@ int CCubeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//("*");
 	if (kj768 == true)
-		GetParent()->SetWindowTextA("하이온의 미디 플레이어 v5.1");
+		GetParent()->SetWindowTextA("하이온의 미디 플레이어 v5.4");
 	else
-		GetParent()->SetWindowTextA("hyon's midi player v5.1");
+		GetParent()->SetWindowTextA("hyon's midi player v5.4");
 	printf("P");
 	CRect rct; GetClientRect(rct);
 	windx = rct.Width();
@@ -4458,9 +4582,9 @@ inline void CCubeView::DrawScene(void)
 
 							dc.TextOut(0, 0 + 20 * (stringcount + 1), t);
 							if (kj768 == true)
-								sprintf(t, "하이온의 미디 플레이어 v5.1 -불러오는 중:%.1lfx", (clocks2 - clocks));
+								sprintf(t, "하이온의 미디 플레이어 v5.4 -불러오는 중:%.1lfx", (clocks2 - clocks));
 							else
-								sprintf(t, "hyon's midi player v5.1 -Loading:%.1lfx", (clocks2 - clocks));
+								sprintf(t, "hyon's midi player v5.4 -Loading:%.1lfx", (clocks2 - clocks));
 							clocks = clocks2;
 							GetParent()->SetWindowTextA(t);
 							mode = 10;
@@ -4577,8 +4701,8 @@ inline void CCubeView::DrawScene(void)
 			
 			if (setmidivol) {
 				setmidivol = 0;
-				waveOutSetVolume(0, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
-				midiOutSetVolume(playmidiout, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
+				waveOutSetVolume(0, (int)(playvolume * 65535.) + ((int)(playvolume * 65535.) << 16));
+				midiOutSetVolume(playmidiout, (int)(playvolume * 65535.) + ((int)(playvolume * 65535.) << 16));
 
 			}
 			if (mode == 13 && mpoffset == 1) {
@@ -4720,7 +4844,7 @@ inline void CCubeView::DrawScene(void)
 					}
 					//printf("V");
 					waveOutOpen(&hWaveOut, WAVE_MAPPER, &wf, 0, 0, CALLBACK_NULL);
-					waveOutSetVolume(0, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
+					waveOutSetVolume(0, (int)(playvolume * 65535.) + ((int)(playvolume * 65535.) << 16));
 					//printf("W");
 					wavestate = 1;
 					waveOutPrepareHeader(hWaveOut, &wh, sizeof(wh));
@@ -4906,17 +5030,17 @@ inline void CCubeView::DrawScene(void)
 			if (lt == 0) {
 				if (tsb7[0] != 0) {
 					if (kj768 == true)
-						sprintf(t, "하이온의 미디 플레이어 v5.1 -%s/%dfps/%s/%s", midname, fps, midstr, tsb7);
+						sprintf(t, "하이온의 미디 플레이어 v5.4 -%s/%dfps/%s/%s", midname, fps, midstr, tsb7);
 					else
-						sprintf(t, "hyon's midi player v5.1 -%s/%dfps/%s/%s", midname, fps, midstr, tsb7);
+						sprintf(t, "hyon's midi player v5.4 -%s/%dfps/%s/%s", midname, fps, midstr, tsb7);
 
 				}
 				else {
 					//////printf("%x", tsb7[0]);
 					if (kj768 == true)
-						sprintf(t, "하이온의 미디 플레이어 v5.1 -%s/%dfps/%s", midname, fps, midstr);
+						sprintf(t, "하이온의 미디 플레이어 v5.4 -%s/%dfps/%s", midname, fps, midstr);
 					else
-						sprintf(t, "hyon's midi player v5.1 -%s/%dfps/%s", midname, fps, midstr);
+						sprintf(t, "hyon's midi player v5.4 -%s/%dfps/%s", midname, fps, midstr);
 				}
 				GetParent()->SetWindowTextA(t);
 
@@ -6508,9 +6632,9 @@ void CCubeView::OnPlayPitchdown()
 	}
 	pitch[9] = 100.;
 	if (kj768 == true)
-		sprintf(t, "하이온의 미디 플레이어 v5.1 - 음높이 -1");
+		sprintf(t, "하이온의 미디 플레이어 v5.4 - 음높이 -1");
 	else
-		sprintf(t, "hyon's midi player v5.1 - pitch -1");
+		sprintf(t, "hyon's midi player v5.4 - pitch -1");
 
 	GetParent()->SetWindowTextA(t);
 }
@@ -6525,9 +6649,9 @@ void CCubeView::OnPlayPitchup()
 	}
 	pitch[9] = 100.;
 	if (kj768 == true)
-		sprintf(t, "하이온의 미디 플레이어 v5.1 - 음높이 +1");
+		sprintf(t, "하이온의 미디 플레이어 v5.4 - 음높이 +1");
 	else
-		sprintf(t, "hyon's midi player v5.1 - pitch +1");
+		sprintf(t, "hyon's midi player v5.4 - pitch +1");
 
 	GetParent()->SetWindowTextA(t);
 }
@@ -6589,9 +6713,9 @@ void CCubeView::OnPlaySkipback()
 			playmidin0 += 200 * 50;
 			//if (playoffset < 0) playoffset = 0;
 			if (kj768 == true)
-				sprintf(t, "하이온의 미디 플레이어 v5.1 -오프셋 %.2lf초", (float)playoffset / 20, '%');
+				sprintf(t, "하이온의 미디 플레이어 v5.4 -오프셋 %.2lf초", (float)playoffset / 20, '%');
 			else
-				sprintf(t, "hyon's midi player v5.1 -offset %.2lfsec", (float)playoffset / 20, '%');
+				sprintf(t, "hyon's midi player v5.4 -offset %.2lfsec", (float)playoffset / 20, '%');
 
 			GetParent()->SetWindowTextA(t);
 			mtinit2();
@@ -6622,9 +6746,9 @@ void CCubeView::OnPlaySkipforward()
 			playmidin0 -= 200 * 50;
 			printf("R");
 			if (kj768 == true)
-				sprintf(t, "하이온의 미디 플레이어 v5.1 -오프셋 %.2lf초", (float)playoffset / 20, '%');
+				sprintf(t, "하이온의 미디 플레이어 v5.4 -오프셋 %.2lf초", (float)playoffset / 20, '%');
 			else
-				sprintf(t, "hyon's midi player v5.1 -offset %.2lfsec", (float)playoffset / 20, '%');
+				sprintf(t, "hyon's midi player v5.4 -offset %.2lfsec", (float)playoffset / 20, '%');
 			printf("S");
 			GetParent()->SetWindowTextA(t);
 			mtinit2();
@@ -6644,9 +6768,9 @@ void CCubeView::OnPlaySpeeddown()
 	SetTimer(1, (int)(17. / (spd / 100.)), 0);
 	//SetTimer(1, playspeed / 5 * 2, 0);
 	if (kj768 == true)
-		sprintf(t, "하이온의 미디 플레이어 v5.1 -재생 속도 %d%c", (int)(spd), '%');
+		sprintf(t, "하이온의 미디 플레이어 v5.4 -재생 속도 %d%c", (int)(spd), '%');
 	else
-		sprintf(t, "hyon's midi player v5.1 -speed %d%c", (int)spd, '%');
+		sprintf(t, "hyon's midi player v5.4 -speed %d%c", (int)spd, '%');
 	GetParent()->SetWindowTextA(t);
 	UpdateData(0);
 
@@ -6662,9 +6786,9 @@ void CCubeView::OnPlaySpeedup()
 	KillTimer(1);
 	SetTimer(1, (int)(17. / (spd / 100.)), 0);
 	if (kj768 == true)
-		sprintf(t, "하이온의 미디 플레이어 v5.1 -재생 속도 %d%c", (int)(spd), '%');
+		sprintf(t, "하이온의 미디 플레이어 v5.4 -재생 속도 %d%c", (int)(spd), '%');
 	else
-		sprintf(t, "hyon's midi player v5.1 -speed %d%c", (int)spd, '%');
+		sprintf(t, "hyon's midi player v5.4 -speed %d%c", (int)spd, '%');
 	GetParent()->SetWindowTextA(t);
 	UpdateData(0);
 	//SetTimer(1, playspeed / 5 * 2, 0);
@@ -6714,13 +6838,13 @@ void CCubeView::OnPlayVolumedown()
 	playvolume /= 1.01;
 	if (playvolume<0.01)playvolume = 0.01;
 
-	waveOutSetVolume(0, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
-	midiOutSetVolume(playmidiout, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
+	waveOutSetVolume(0, (int)(playvolume * 65535.) + ((int)(playvolume * 65535.) << 16));
+	midiOutSetVolume(playmidiout, (int)(playvolume * 65535.) + ((int)(playvolume * 65535.) << 16));
 	//alSourcef(isource, AL_GAIN, playvolume);
 	if (kj768 == true)
-		sprintf(t, "하이온의 미디 플레이어 v5.1 - 소리 크기 %d%c", (int)(playvolume * 100), '%');
+		sprintf(t, "하이온의 미디 플레이어 v5.4 - 소리 크기 %d%c", (int)(playvolume * 100), '%');
 	else
-		sprintf(t, "hyon's midi player v5.1 - volume %d%c", (int)(playvolume * 100), '%');
+		sprintf(t, "hyon's midi player v5.4 - volume %d%c", (int)(playvolume * 100), '%');
 	GetParent()->SetWindowTextA(t);
 }
 void CCubeView::OnPlayVolumeup()
@@ -6728,13 +6852,13 @@ void CCubeView::OnPlayVolumeup()
 	
 	playvolume *= 1.01;
 	if (playvolume>1.0)playvolume = 1.0;
-	waveOutSetVolume(0, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
-	midiOutSetVolume(playmidiout, (int)(playvolume * 16384.* ((double)(100 - midipan) / 200.)) + ((int)(playvolume * 16384.* ((double)(midipan + 100) / 200.)) << 16));
+	waveOutSetVolume(0, (int)(playvolume * 65535.) + ((int)(playvolume * 65535.) << 16));
+	midiOutSetVolume(playmidiout, (int)(playvolume * 65535.) + ((int)(playvolume * 65535.) << 16));
 	//alSourcef(isource, AL_GAIN, playvolume);
 	if (kj768 == true)
-		sprintf(t, "하이온의 미디 플레이어 v5.1 - 소리 크기 %d%c", (int)(playvolume * 100), '%');
+		sprintf(t, "하이온의 미디 플레이어 v5.4 - 소리 크기 %d%c", (int)(playvolume * 100), '%');
 	else
-		sprintf(t, "hyon's midi player v5.1 - volume %d%c", (int)(playvolume * 100), '%');
+		sprintf(t, "hyon's midi player v5.4 - volume %d%c", (int)(playvolume * 100), '%');
 	GetParent()->SetWindowTextA(t);
 }
 void CCubeView::OnPlayReset()
@@ -6749,9 +6873,9 @@ void CCubeView::OnPlayReset()
 	}
 	bpshf = 0;
 	if (kj768 == true)
-		sprintf(t, "하이온의 미디 플레이어 v5.1 -속도 100%c,소리 크기 100%c", '%', '%');
+		sprintf(t, "하이온의 미디 플레이어 v5.4 -속도 100%c,소리 크기 100%c", '%', '%');
 	else
-		sprintf(t, "hyon's midi player v5.1 -speed 100%c,volume 100%c", '%', '%');
+		sprintf(t, "hyon's midi player v5.4 -speed 100%c,volume 100%c", '%', '%');
 	GetParent()->SetWindowTextA(t);
 	if (midiout)waveOutSetPosition(playoffset * 50);
 	else {

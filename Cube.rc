@@ -130,7 +130,7 @@ BEGIN
     COMBOBOX        IDC_COMBO2,168,107,82,76,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_DIALOG1 DIALOGEX 0, 0, 475, 159
+IDD_DIALOG1 DIALOGEX 0, 0, 475, 143
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
@@ -151,21 +151,19 @@ BEGIN
     EDITTEXT        IDC_d1_sc,102,45,133,12,ES_AUTOHSCROLL
     LTEXT           "Static",IDC_static_1,0,2,368,9,SS_SUNKEN
     PUSHBUTTON      "cancel",IDC_BUTTON1,421,1,53,13
-    LTEXT           "bank\n(default -1, percussion 127)",IDC_d1_bnk,241,59,97,17
-    EDITTEXT        IDC_d1_bc,340,61,24,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "¡ü",IDC_d1_bcup,364,60,11,8
-    PUSHBUTTON      "¡ý",IDC_d1_bcdw,364,68,11,8
+    LTEXT           "bank\n(default -1, percussion 127)",IDC_d1_bnk,241,44,97,17
+    EDITTEXT        IDC_d1_bc,340,46,24,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "¡ü",IDC_d1_bcup,364,45,11,8
+    PUSHBUTTON      "¡ý",IDC_d1_bcdw,364,53,11,8
     LTEXT           "vol.bass",IDC_d1_vol3,3,77,76,11
     EDITTEXT        IDC_d1_vcbass,102,77,24,12,ES_AUTOHSCROLL
     PUSHBUTTON      "¡ü",IDC_d1_vcup_bass,126,76,11,8
     PUSHBUTTON      "¡ý",IDC_d1_vcdw_bass,126,84,11,8
     EDITTEXT        IDC_d1_vvbass,139,77,96,12,ES_AUTOHSCROLL
-    LTEXT           "vol.pan (-100~100)",IDC_d1_spd2,241,32,99,11
-    EDITTEXT        IDC_vol_pan,340,30,133,12,ES_AUTOHSCROLL
-    LTEXT           "program (defalut 129)",IDC_d1_inst,241,79,97,11
-    EDITTEXT        IDC_d1_ic,340,77,24,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "¡ü",IDC_d1_icup,364,76,11,8
-    PUSHBUTTON      "¡ý",IDC_d1_icdw,364,84,11,8
+    LTEXT           "program (defalut 129)",IDC_d1_inst,241,64,97,11
+    EDITTEXT        IDC_d1_ic,340,62,24,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "¡ü",IDC_d1_icup,364,61,11,8
+    PUSHBUTTON      "¡ý",IDC_d1_icdw,364,69,11,8
     CTEXT           "channel\n*:all",IDC_d1_chn2,341,12,25,16
     CTEXT           "value",IDC_d1_val2,413,17,19,8
     LTEXT           "vol.mid",IDC_d1_vol5,3,93,69,11
@@ -173,29 +171,29 @@ BEGIN
     PUSHBUTTON      "¡ü",IDC_d1_vcup_mid,126,93,11,8
     PUSHBUTTON      "¡ý",IDC_d1_vcdw_mid,126,101,11,8
     EDITTEXT        IDC_d1_vvmid,139,93,96,12,ES_AUTOHSCROLL
-    LTEXT           "reverb (-127~127)",IDC_d1_rev,240,95,66,11
-    EDITTEXT        IDC_d1_rc,340,93,24,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "¡ü",IDC_d1_rcup,364,92,11,8
-    PUSHBUTTON      "¡ý",IDC_d1_rcdw,364,100,11,8
-    CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,0,141,474,14
-    LTEXT           "vol.master (0~100)",IDC_d1_spd4,242,47,96,11
-    EDITTEXT        IDC_vol_master,340,45,133,12,ES_AUTOHSCROLL
+    LTEXT           "reverb (-127~127)",IDC_d1_rev,240,80,66,11
+    EDITTEXT        IDC_d1_rc,340,78,24,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "¡ü",IDC_d1_rcup,364,77,11,8
+    PUSHBUTTON      "¡ý",IDC_d1_rcdw,364,85,11,8
+    CONTROL         "",IDC_SLIDER1,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,235,124,240,14
+    LTEXT           "vol.master (0~100)",IDC_d1_spd4,242,32,96,11
+    EDITTEXT        IDC_vol_master,340,30,133,12,ES_AUTOHSCROLL
     LTEXT           "vol.trib",IDC_d1_vol7,3,109,74,11
     EDITTEXT        IDC_d1_vctrib,102,109,24,12,ES_AUTOHSCROLL
     PUSHBUTTON      "¡ü",IDC_d1_vcup_trib,126,109,11,8
     PUSHBUTTON      "¡ý",IDC_d1_vcdw_trib,126,118,11,8
     EDITTEXT        IDC_d1_vvtrib,139,109,96,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_d1_rv,376,93,97,12,ES_AUTOHSCROLL
-    LTEXT           "modulation (-16383~16383)",IDC_d1_vol8,240,110,96,11
-    EDITTEXT        IDC_d1_mc,340,110,24,12,ES_AUTOHSCROLL
-    PUSHBUTTON      "¡ü",IDC_d1_mcup,364,109,11,8
-    PUSHBUTTON      "¡ý",IDC_d1_mcdw,364,117,11,8
-    EDITTEXT        IDC_d1_mv,376,110,98,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_d1_rv,376,78,97,12,ES_AUTOHSCROLL
+    LTEXT           "modulation (-16383~16383)",IDC_d1_vol8,240,95,96,11
+    EDITTEXT        IDC_d1_mc,340,95,24,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "¡ü",IDC_d1_mcup,364,94,11,8
+    PUSHBUTTON      "¡ý",IDC_d1_mcdw,364,102,11,8
+    EDITTEXT        IDC_d1_mv,376,95,98,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_d1_pv2,183,30,52,12,ES_AUTOHSCROLL
-    COMBOBOX        IDC_COMBO2,376,77,97,402,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "position",IDC_d1_spd8,241,127,59,11
-    EDITTEXT        IDC_d1_sc2,339,125,133,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_d1_bv,376,61,97,12,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO2,376,62,97,402,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "position",IDC_d1_spd8,241,112,59,11
+    EDITTEXT        IDC_d1_sc2,339,110,133,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_d1_bv,376,46,97,12,ES_AUTOHSCROLL
     CONTROL         "only keyshift",IDC_oks,"Button",BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP,3,36,95,10
     LTEXT           "chorus (-127~127)",IDC_d1_vol9,4,125,96,11
     EDITTEXT        IDC_d1_cc,102,125,24,12,ES_AUTOHSCROLL
@@ -238,7 +236,7 @@ BEGIN
 
     IDD_DIALOG1, DIALOG
     BEGIN
-        BOTTOMMARGIN, 155
+        BOTTOMMARGIN, 139
     END
 
     IDD_DIALOG2, DIALOG
@@ -343,8 +341,6 @@ END
 IDD_DIALOG1 AFX_DIALOG_LAYOUT
 BEGIN
     0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
@@ -982,7 +978,7 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "CIE lab-http://cielab.ze.am"
+            VALUE "CompanyName", "CIE lab-http://cielab.uy.to"
             VALUE "FileDescription", "hyon's midi player"
             VALUE "FileVersion", "4.1.0.0"
             VALUE "InternalName", "hyon's midi player"

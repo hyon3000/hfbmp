@@ -37,7 +37,6 @@
 #define IDC_color                       1030
 #define IDC_d1_vol3                     1030
 #define IDC_clrrandom                   1031
-#define IDC_d1_spd2                     1031
 #define IDC_posup                       1032
 #define IDC_d1_inst                     1032
 #define IDC_posfront                    1033
@@ -89,7 +88,6 @@
 #define IDC_blu2                        1055
 #define IDC_d1_vvbass                   1055
 #define IDC_tx                          1056
-#define IDC_vol_pan                     1056
 #define IDC_y                           1057
 #define IDC_d1_ic                       1057
 #define IDC_ty                          1058
@@ -184,7 +182,6 @@
 #define IDC_oks                         1102
 #define IDC_d1_ccdw                     1103
 #define IDC_d1_cv                       1104
-#define IDC_BUTTON2                     1106
 #define ID_FILE_PLAY                    32772
 #define ID_FILE_OPEN32773               32773
 #define ID_HELP_VIEWREADME              32774

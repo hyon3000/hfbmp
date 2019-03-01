@@ -60,7 +60,7 @@ public:
 	afx_msg void OnKillfocusD1Pv2();
 	CString cpv2;
 	afx_msg void OnChangeVolMaster();
-	afx_msg void OnChangeVolPan();
+	//afx_msg void OnChangeVolPan();
 	CString cvv_mast;
 	CString cvv_pan;
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
@@ -130,7 +130,7 @@ public:
 	afx_msg void OnKillfocusCombo2();
 	CComboBox _civ;
 
-	afx_msg void OnClickedButton2();
+	//afx_msg void OnClickedButton2();
 	afx_msg void OnDestroy();
 	virtual BOOL DestroyWindow();
 };

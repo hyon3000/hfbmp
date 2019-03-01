@@ -23,7 +23,7 @@
 static char BASED_CODE THIS_FILE[] = __FILE__;
 #endif
 char jk678[14][10000];
-bool kj768,ghkj6,j5j58,midiout = true, tfnm;
+bool kj768,ghkj6,j5j58,midiout = false, tfnm=1;
 int h54ui=0,jhj56=2,j65j8=100;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -232,7 +232,7 @@ void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 
 void CMainFrame::OnHelpGetcurrentversionoffirmware()
 {
-	ShellExecute(NULL, "open", "http://cielab.ze.am", NULL, NULL, SW_SHOW);
+	ShellExecute(NULL, "open", "http://cielab.uy.to", NULL, NULL, SW_SHOW);
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 

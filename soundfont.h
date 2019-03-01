@@ -73,13 +73,18 @@ FILE *sf;
 unsigned int soundfontcppsiz, tmpsize;
 int bfrsize,bfsd50,bf2, aptr, *sineval, getboth_righttmp, aptrc1, aptrc2, aptrc3, aptrrv, chkytmp;
 char volumeptrcount[2048][2], volumeptr2[2048][128][2], volumeptr3[2048][2], volumeptr3mono[2048];
-double valt, *poutbuffer0,*poutbuffer1,*poutbuffer2,*poutbuffer3,*poutbuffer4,*poutbuffer5,*poutbuffer6,*poutbuffer7,*poutbuffer8,*poutbuffer9,*poutbuffera,*poutbufferb,*poutbufferc,*poutbufferd,*poutbuffere,*poutbufferf, aptrp, getbotht, readtemp, getlefttmp,getrighttmp, outbuffer0, outbuffer1, outbuffer2, outbuffer3, outbuffer4, outbuffer5, outbuffer6, outbuffer7,outbuffer8, outbuffer9, outbuffera, outbufferb, outbufferc, outbufferd, outbuffere, outbufferf;
+double 
+*poutbuffer[16],*pcoutbuffer[16]
+,aptrp, getbotht, readtemp, getlefttmp,getrighttmp, 
+
+outbuffer[16];
 long smplptr;
-long long valtt;
 class parsetmpgen :public _gen {
 public:
-	long releasereserved = 0, key, vel, lr, dwSampleRate = -1, enablefilter, noteon = 0, noteoff2 = 1, ly = 0, looplength2 = 1, midichennel;
-	double volenvhold = -1, volenvdecay = -1, modenvhold = -1, modenvdecay = -1, pitch = 1, volume = 1, outsamplerate, volenvattack2, volenvhold2, volenvdecay2, modenvattack2, modenvhold2, modenvdecay2, sustainvol, volenvsustaindvolenvdecayd20, volenvsustaindvolenvdecayd202, volenvsustaindvolenvdecayd202p, sustainmod, modenvsustaindmodenvdecayd20, modenvsustaindmodenvdecayd202, modenvsustaindmodenvdecayd202p, deltasecond, dsamplestartoffset, dsampleendoffset, dstartloopoffset, dendloopoffset, sustain2, outtmp, outtmpt, outtmp2, secondtmp, *smpl, centtmp, ptr, timeptr, modwh, portam, loadedvolume, attvol, w0, a0, a1, a2, b0, b1, b2, f0 = 0, fm1 = 0, fm2 = 0, setuplength, looplength = 0.;
+	unsigned long valtt;
+	double valt;
+	long veld,releasereserved = 0, key, vel, lr, dwSampleRate = -1, enablefilter, noteon = 0, noteoff2 = 1, ly = 0, looplength2 = 1, midichennel;
+	double volenvhold = -1, volenvdecay = -1, modenvhold = -1, modenvdecay = -1, pitch = 1, volume = 1, outsamplerate, volenvattack2, volenvhold2, volenvdecay2, modenvattack2, modenvhold2, modenvdecay2, sustainvol, volenvsustaindvolenvdecayd20, volenvsustaindvolenvdecayd202, volenvsustaindvolenvdecayd202p, sustainmod, modenvsustaindmodenvdecayd20, modenvsustaindmodenvdecayd202, modenvsustaindmodenvdecayd202p, deltasecond, dsamplestartoffset, dsampleendoffset, dstartloopoffset, dendloopoffset, sustain2, outtmp, outtmpt, outtmp2, secondtmp, *smpl, centtmp, ptr, timeptr, modwh, portam, loadedvolume,lvatt,lvsus, attvol, w0, a0, a1, a2, b0, b1, b2, f0 = 0, fm1 = 0, fm2 = 0, setuplength, looplength = 0.;
 	char achSampleName[20], instname[20], lrlo = -1, lrhi = -1;
 	unsigned long reg = 0;
 	void reset() {
@@ -398,19 +403,127 @@ public:
 	inline void setup(int midichennel) {
 		this->midichennel = midichennel;
 	}
-	inline void set(double volumei) {
-		sustain2 = 1.;
+	inline void set(double volumei,int vd) {
+		veld = vd;
+		sustain2 = 0.;
 		releasereserved = 0;
 		loadedvolume = volumei*volume*attvol;
-
+		lvatt = loadedvolume / volenvattack;
+			lvsus = loadedvolume *sustainvol;
 		ptr = dsamplestartoffset;
 		timeptr = 0;
 		noteon = 1;
 		noteoff2 = 0;
 	}
+
+	inline double readval1() {
+
+		if (noteoff2)return 0.;
+
+		if (looplength2)return 0.;
+
+		if (ly)
+			if (timeptr > volenvdecay2&&noteon) {
+				secondtmp = timeptr;
+				noteon = 0;
+			}
+
+
+
+		timeptr += deltasecond;
+
+		outtmp = pitch*pitcherr[key][midichennel];
+		if (enablefilter) { outtmpt = filterfrequency; }
+		if (modenvpitch != 0. || modenvfilter != 0.) {
+			if (noteon) {
+				if (timeptr < modenvdelay) centtmp = 0.;
+				else if (timeptr < modenvattack2) centtmp = (timeptr - modenvdelay) / modenvattack;
+				else if (timeptr < modenvhold2)centtmp = 1.;
+				else if (timeptr < modenvdecay2) centtmp = pow(10, modenvsustaindmodenvdecayd20*(timeptr - modenvhold2));
+				else centtmp = sustainmod;
+			}
+			else {
+
+				centtmp = sustainmod*pow(10, modenvsustaindmodenvdecayd202*(timeptr - secondtmp));
+
+			}
+			outtmp *= pow(2, modenvpitch*centtmp);
+			if (enablefilter)outtmpt *= pow(2, modenvfilter*centtmp);
+		}
+		if (modlfopitch != 0. || modlfofilter != 0.) {
+			if (timeptr > modlfodelay) {
+
+				outtmp2 = sin(modlfofreq*(timeptr - modlfodelay));
+				outtmp *= pow(2., modlfopitch*outtmp2);
+				if (enablefilter)outtmpt *= pow(2., modlfofilter*outtmp2);
+			}
+
+		}
+		if (viblfopitch != 0.) {
+			if (timeptr > viblfodelay) {
+				outtmp *= pow(2., viblfopitch*sin(viblfofreq*(timeptr - viblfodelay)));
+			}
+
+		}
+		if (enablefilter && (modenvfilter != 0. || modlfofilter != 0.)) {
+
+			w0 = 6.283185307179586476925286766559*outtmpt;
+			a0 = 4 * outsamplerate*outsamplerate + (2 * w0*outsamplerate) / (filterresonance)+w0*w0;
+			a1 = (-8 * outsamplerate*outsamplerate + 2 * w0*w0) / a0;
+			a2 = (4 * outsamplerate*outsamplerate - 2 * w0* outsamplerate / (filterresonance)+w0*w0) / a0;
+			b0 = (w0*w0) / a0;
+			b1 = 2 * b0;
+			b2 = b0;
+		}
+		ptr += outtmp;
+		while (ptr >= dendloopoffset)ptr -= looplength;
+
+		if (noteon) {
+			if (timeptr < volenvdelay) {
+				if (enablefilter) {
+					outtmp = 0.;
+				}
+				else return 0.;
+
+			}
+			else if (timeptr < volenvattack2) outtmp = loadedvolume*(timeptr - volenvdelay) / volenvattack;
+			else if (timeptr < volenvhold2)outtmp = loadedvolume;
+			else if (timeptr < volenvdecay2) outtmp = loadedvolume*pow10(volenvsustaindvolenvdecayd20*(timeptr - volenvhold2));
+			else outtmp = loadedvolume*sustainvol;
+		}
+		else {
+
+			outtmp = loadedvolume* pow10(volenvsustaindvolenvdecayd202p + volenvsustaindvolenvdecayd202*(timeptr - secondtmp));
+			if (outtmp < 0.00001) noteoff2 = 1;
+
+		}
+		if (modlfovolume != 0.) {
+			if (timeptr > modlfodelay) {
+				outtmp2 = sin(modlfofreq*(timeptr - modlfodelay));
+				outtmp2 = modlfovolume*(outtmp2 > 0. ? 0. : outtmp2);
+
+				outtmp *= pow10(outtmp2 / 20.);
+			}
+
+		}
+
+		outtmp *= chvol[midichennel];
+		if (enablefilter)return outtmp*
+			(fm2 = fm1, fm1 = f0, f0 = ontimeresample(ptr) - a1*fm1 - a2*fm2, b0*f0 + b1*fm1 + b2*fm2);
+		else
+			return outtmp*ontimeresample(ptr);
+	}
+	fp fastpow;
+	inline double pow10(double b) {
+		fastpow.d = 10.;
+		fastpow.x[1] = (int)(b * (fastpow.x[1] - 1072632447) + 1072632447);
+		fastpow.x[0] = 0;
+		return fastpow.d;
+	}
 	inline double readval() {
 
-		if (!reg) return 0.;
+		if (reg);
+		else return 0.;
 		if (noteoff2)return 0.;
 
 		if (looplength2)return 0.;
@@ -493,33 +606,42 @@ public:
 		if (noteon) {
 			//printf("%lf %lf %lf %lf %lf %lf\n", dsamplestartoffset, dsampleendoffset, dstartloopoffset, dendloopoffset,looplength,ptr);
 			//system("pause");
+			
 			if (timeptr < volenvdelay) {
 				if (enablefilter) {
-					outtmp = 0.;
+					outtmp = 0., sustain2 = outtmp;
 				}
 				else return 0.;
 
 			}
-			else if (timeptr < volenvattack2) outtmp = loadedvolume*chvol[midichennel] * (timeptr - volenvdelay) / volenvattack;
+			else if (timeptr < volenvattack2) outtmp = lvatt*chvol[midichennel] * (timeptr - volenvdelay) , sustain2 = outtmp;
 
 			else {
 				//printf("%lf\n",timeptr);
 				//Sleep(3);
+				
+				if (timeptr < volenvhold2)outtmp = loadedvolume*chvol[midichennel], sustain2 = outtmp;
+				else if (timeptr < volenvdecay2)outtmp = loadedvolume*chvol[midichennel] * pow10(volenvsustaindvolenvdecayd20*(timeptr - volenvhold2)), sustain2 = outtmp;
+				else outtmp = lvsus*chvol[midichennel], sustain2 = outtmp;
 				if (releasereserved) {
 					//printf("/"); system("pause");
 					releasereserved = 0;
 					secondtmp = timeptr;
 					noteon = 0;
+					if (timeptr < 1 || veld<24) sustain2 = 0;
 				}
-				if (timeptr < volenvhold2)outtmp = loadedvolume*chvol[midichennel], sustain2 = outtmp;
-				else if (timeptr < volenvdecay2)outtmp = loadedvolume*chvol[midichennel] * pow10(volenvsustaindvolenvdecayd20*(timeptr - volenvhold2)), sustain2 = outtmp;
-				else outtmp = loadedvolume*chvol[midichennel] * sustainvol, sustain2 = outtmp;
+			}
+			if (releasereserved&&midichennel != 9) {
+				//printf("/"); system("pause");
+				releasereserved = 0;
+				secondtmp = timeptr;
+				noteon = 0; if (timeptr < 1 || veld<24) sustain2 = 0;
 			}
 		}
 		else {
 
 			//system("pause");
-			outtmp = sustain2* pow10(volenvsustaindvolenvdecayd202*(timeptr - secondtmp));
+			outtmp =  sustain2* pow10(volenvsustaindvolenvdecayd202*(timeptr - secondtmp));
 
 			if (outtmp < 0.00001)
 				noteoff2 = 1;
@@ -537,6 +659,7 @@ public:
 		//if (ly) outtmp = loadedvolume;
 		//printf("%lf %lf\n", sustain2, outtmp);
 		//Sleep(10);
+		
 		if (enablefilter)return outtmp*
 			(fm2 = fm1, fm1 = f0, f0 = ontimeresample(ptr) - a1*fm1 - a2*fm2, b0*f0 + b1*fm1 + b2*fm2);
 		else
@@ -724,7 +847,7 @@ inline void setnote(int chennel, int key, int vel, double volume) {
 	volumeptr3mono[chkytmp] = volumeptr2[chkytmp][vel][0];
 
 	
-	parsetmp[chkytmp][volumeptr3mono[chkytmp]][0].set(volume);
+	parsetmp[chkytmp][volumeptr3mono[chkytmp]][0].set(volume, vel);
 }
 inline void releasenote(int chennel, int key) {
 	
@@ -735,8 +858,8 @@ inline void setnotestereo(int chennel,int key,int vel, double volume ) {
 	chkytmp = ((chennel << 7) | key);
 	volumeptr3[chkytmp][0] = volumeptr2[chkytmp][vel][0];
 	volumeptr3[chkytmp][1] = volumeptr2[chkytmp][vel][1];
-	parsetmp[chkytmp][volumeptr3[chkytmp][0]][0].set(volume);
-	parsetmp[chkytmp][volumeptr3[chkytmp][1]][1].set(volume);
+	parsetmp[chkytmp][volumeptr3[chkytmp][0]][0].set(volume, vel);
+	parsetmp[chkytmp][volumeptr3[chkytmp][1]][1].set(volume, vel);
 }
 inline void releasenotestereo(int chennel, int key) {
 	chkytmp = ((chennel << 7) | key);
@@ -748,40 +871,15 @@ inline int resetarray() {
 	bfrsize = playrate;
 	bf2 = bfrsize / 10;
 	bfsd50 = bfrsize / 2200;
-	poutbuffer0 = new double[bfrsize];
-	poutbuffer1 = new double[bfrsize];
-	poutbuffer2 = new double[bfrsize];
-	poutbuffer3 = new double[bfrsize];
-	poutbuffer4 = new double[bfrsize];
-	poutbuffer5 = new double[bfrsize];
-	poutbuffer6 = new double[bfrsize];
-	poutbuffer7 = new double[bfrsize];
-	poutbuffer8 = new double[bfrsize];
-	poutbuffer9 = new double[bfrsize];
-	poutbuffera = new double[bfrsize];
-	poutbufferb = new double[bfrsize];
-	poutbufferc = new double[bfrsize];
-	poutbufferd = new double[bfrsize];
-	poutbuffere = new double[bfrsize];
-	poutbufferf = new double[bfrsize];
+	for (int i = 0; i < 16; i++) {
+		poutbuffer[i] = new double[bfrsize];
+		pcoutbuffer[i]= new double[bfrsize];
+	}
 	sineval = new int[bfrsize];
+	for(int j=0;j<16;j++)
 	for (int i = 0; i < bfrsize; i++) {
-		poutbuffer0[i] = 0; 
-		poutbuffer1[i] = 0; 
-		poutbuffer2[i] = 0; 
-		poutbuffer3[i] = 0;
-		poutbuffer4[i] = 0;
-		poutbuffer5[i] = 0;
-		poutbuffer6[i] = 0;
-		poutbuffer7[i] = 0;
-		poutbuffer8[i] = 0;
-		poutbuffer9[i] = 0;
-		poutbuffera[i] = 0;
-		poutbufferb[i] = 0;
-		poutbufferc[i] = 0;
-		poutbufferd[i] = 0;
-		poutbuffere[i] = 0;
-		poutbufferf[i] = 0;
+		poutbuffer[j][i] = 0; 
+		pcoutbuffer[j][i] = 0;
 		sineval[i] = 
 		(
 			((int)((double)bfsd50*(1. + sin(4 * 3.1415 * (double)i / (double)bfrsize))))
@@ -789,82 +887,70 @@ inline int resetarray() {
 	}
 	return 0;
 }
-inline int getleft() {
+inline int getleft2() {
 
-	outbuffer0=0, outbuffer1=0, outbuffer2=0, outbuffer3=0, outbuffer4=0, outbuffer5=0, outbuffer6=0, outbuffer7=0,
-		outbuffer8=0, outbuffer9=0, outbuffera=0, outbufferb=0, outbufferc=0, outbufferd=0, outbuffere=0, outbufferf=0;
 	getlefttmp = 0;
-#pragma omp parallel for reduction(+:outbuffer0, outbuffer1, outbuffer2, outbuffer3, outbuffer4, outbuffer5, outbuffer6, outbuffer7, outbuffer8, outbuffer9, outbuffera, outbufferb, outbufferc, outbufferd, outbuffere, outbufferf)
-	for (int i = 0; i < 128; i++) {
-		outbuffer0 += parsetmp[i + 128 * 0x00][volumeptr3mono[i + 128 * 0x00]][0].readval();
-		outbuffer1 += parsetmp[i + 128 * 0x01][volumeptr3mono[i + 128 * 0x01]][0].readval();
-		outbuffer2 += parsetmp[i + 128 * 0x02][volumeptr3mono[i + 128 * 0x02]][0].readval();
-		outbuffer3 += parsetmp[i + 128 * 0x03][volumeptr3mono[i + 128 * 0x03]][0].readval();
-		outbuffer4 += parsetmp[i + 128 * 0x04][volumeptr3mono[i + 128 * 0x04]][0].readval();
-		outbuffer5 += parsetmp[i + 128 * 0x05][volumeptr3mono[i + 128 * 0x05]][0].readval();
-		outbuffer6 += parsetmp[i + 128 * 0x06][volumeptr3mono[i + 128 * 0x06]][0].readval();
-		outbuffer7 += parsetmp[i + 128 * 0x07][volumeptr3mono[i + 128 * 0x07]][0].readval();
-		outbuffer8 += parsetmp[i + 128 * 0x08][volumeptr3mono[i + 128 * 0x08]][0].readval();
-		outbuffer9 += parsetmp[i + 128 * 0x09][volumeptr3mono[i + 128 * 0x09]][0].readval();
-		outbuffera += parsetmp[i + 128 * 0x0a][volumeptr3mono[i + 128 * 0x0a]][0].readval();
-		outbufferb += parsetmp[i + 128 * 0x0b][volumeptr3mono[i + 128 * 0x0b]][0].readval();
-		outbufferc += parsetmp[i + 128 * 0x0c][volumeptr3mono[i + 128 * 0x0c]][0].readval();
-		outbufferd += parsetmp[i + 128 * 0x0d][volumeptr3mono[i + 128 * 0x0e]][0].readval();
-		outbuffere += parsetmp[i + 128 * 0x0e][volumeptr3mono[i + 128 * 0x0d]][0].readval();
-		outbufferf += parsetmp[i + 128 * 0x0f][volumeptr3mono[i + 128 * 0x0f]][0].readval();
-		
+#pragma omp parallel for reduction(+:getlefttmp)
+	for (int i = 0; i < 512; i++) {
+		getlefttmp +=
+			parsetmp[i][volumeptr3mono[i]][0].readval() +
+			parsetmp[i + 0x0200][volumeptr3mono[i + 0x0200]][0].readval() +
+			parsetmp[i + 0x0400][volumeptr3mono[i + 0x0400]][0].readval() +
+			parsetmp[i + 0x0600][volumeptr3mono[i + 0x0600]][0].readval();
+
 	}
 
-	aptr++;
-	if (aptr == bfrsize) aptr=0;
-	aptrrv = aptr -bf2;
-	if(aptrrv <0) aptrrv += bfrsize;
-	
-	poutbuffer0[aptr] = outbuffer0 + dreverb[0x00] * poutbuffer0[aptrrv];
-	poutbuffer1[aptr] = outbuffer1 + dreverb[0x01] * poutbuffer1[aptrrv];
-	poutbuffer2[aptr] = outbuffer2 + dreverb[0x02] * poutbuffer2[aptrrv];
-	poutbuffer3[aptr] = outbuffer3 + dreverb[0x03] * poutbuffer3[aptrrv];
-	poutbuffer4[aptr] = outbuffer4 + dreverb[0x04] * poutbuffer4[aptrrv];
-	poutbuffer5[aptr] = outbuffer5 + dreverb[0x05] * poutbuffer5[aptrrv];
-	poutbuffer6[aptr] = outbuffer6 + dreverb[0x06] * poutbuffer6[aptrrv];
-	poutbuffer7[aptr] = outbuffer7 + dreverb[0x07] * poutbuffer7[aptrrv];
-	poutbuffer8[aptr] = outbuffer8 + dreverb[0x08] * poutbuffer8[aptrrv];
-	poutbuffer9[aptr] = outbuffer9 + dreverb[0x09] * poutbuffer9[aptrrv];
-	poutbuffera[aptr] = outbuffera + dreverb[0x0a] * poutbuffera[aptrrv];
-	poutbufferb[aptr] = outbufferb + dreverb[0x0b] * poutbufferb[aptrrv];
-	poutbufferc[aptr] = outbufferc + dreverb[0x0b] * poutbufferc[aptrrv];
-	poutbufferd[aptr] = outbufferd + dreverb[0x0c] * poutbufferd[aptrrv];
-	poutbuffere[aptr] = outbuffere + dreverb[0x0d] * poutbuffere[aptrrv];
-	poutbufferf[aptr] = outbufferf + dreverb[0x0f] * poutbufferf[aptrrv];
-	
-
-			
-	aptrc1 = aptr - sineval[aptr];
-	if (aptrc1 <0)aptrc1 += bfrsize;
-
-	outbuffer0 = poutbuffer0[aptr] + dchorus[0x00] * (poutbuffer0[aptrc1]);
-	outbuffer1 = poutbuffer1[aptr] + dchorus[0x01] * (poutbuffer1[aptrc1]);
-	outbuffer2 = poutbuffer2[aptr] + dchorus[0x02] * (poutbuffer2[aptrc1]);
-	outbuffer3 = poutbuffer3[aptr] + dchorus[0x03] * (poutbuffer3[aptrc1]);
-	outbuffer4 = poutbuffer4[aptr] + dchorus[0x04] * (poutbuffer4[aptrc1]);
-	outbuffer5 = poutbuffer5[aptr] + dchorus[0x05] * (poutbuffer5[aptrc1]);
-	outbuffer6 = poutbuffer6[aptr] + dchorus[0x06] * (poutbuffer6[aptrc1]);
-	outbuffer7 = poutbuffer7[aptr] + dchorus[0x07] * (poutbuffer7[aptrc1]);
-	outbuffer8 = poutbuffer8[aptr] + dchorus[0x08] * (poutbuffer8[aptrc1]);
-	outbuffer9 = poutbuffer9[aptr] + dchorus[0x09] * (poutbuffer9[aptrc1]);
-	outbuffera = poutbuffera[aptr] + dchorus[0x0a] * (poutbuffera[aptrc1]);
-	outbufferb = poutbufferb[aptr] + dchorus[0x0b] * (poutbufferb[aptrc1]);
-	outbufferc = poutbufferc[aptr] + dchorus[0x0c] * (poutbufferc[aptrc1]);
-	outbufferd = poutbufferd[aptr] + dchorus[0x0d] * (poutbufferd[aptrc1]);
-	outbuffere = poutbuffere[aptr] + dchorus[0x0e] * (poutbuffere[aptrc1]);
-	outbufferf = poutbufferf[aptr] + dchorus[0x0f] * (poutbufferf[aptrc1]);
-	
-	
-	getlefttmp= outbuffer0+ outbuffer1+ outbuffer2+ outbuffer3+ outbuffer4+ outbuffer5+ outbuffer6+ outbuffer7+
-		outbuffer8+ outbuffer9+ outbuffera+ outbufferb+ outbufferc+ outbufferd+ outbuffere+ outbufferf;
 
 	if (getlefttmp > 2147483647.)return INT_MAX;
 	else if (getlefttmp <-2147483648.)return  INT_MIN;
+	else return (int)getlefttmp;
+}
+//unsigned long long zt = 0;
+double outbuffer_u[2048];
+inline int getleft() {
+	//zt++;
+	//if (zt == 321064) system("pause");
+	aptr++;
+	if (aptr == bfrsize) aptr = 0;
+	for (int i = 0; i < 16; i++)
+		poutbuffer[i][aptr] = 0;
+	getlefttmp = 0;
+	
+#pragma omp parallel 
+	{
+	double outbuffer_t[16] = { 0. };
+#pragma omp for	
+	for (int t = 0; t < 2048; t++)
+		outbuffer_t[t >> 7] += parsetmp[t][volumeptr3mono[t]][0].readval();
+#pragma omp critical
+	{
+		for (int t = 0; t < 16; t++)
+			poutbuffer[t][aptr] += outbuffer_t[t];
+	}
+
+}
+		
+
+
+	
+	
+	aptrc1 = aptr - sineval[aptr];
+	if (aptrc1 <0)aptrc1 += bfrsize;
+	for (int i = 0; i<16; i++)
+		pcoutbuffer[i][aptr] = poutbuffer[i][aptr] + dchorus[i] * (poutbuffer[i][aptrc1]);
+
+	aptrrv = aptr -bf2;
+	if(aptrrv <0) aptrrv += bfrsize;
+	for(int i=0;i<16;i++)
+		getlefttmp += pcoutbuffer[i][aptr] + dreverb[i] * pcoutbuffer[i][aptrrv];
+	
+
+
+
+
+	if (getlefttmp > 2147483647.)return INT_MAX;
+	else if (getlefttmp <-2147483648.)return  INT_MIN;
+	
 	else return (int)getlefttmp;
 }
 inline int getboth() {

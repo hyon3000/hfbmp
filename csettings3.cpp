@@ -65,7 +65,7 @@ void csettings3::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_static_1, ist);
 	DDX_Text(pDX, IDC_d1_pv2, cpv2);
 	DDX_Text(pDX, IDC_vol_master, cvv_mast);
-	DDX_Text(pDX, IDC_vol_pan, cvv_pan);
+	//DDX_Text(pDX, IDC_vol_pan, cvv_pan);
 	DDX_Text(pDX, IDC_d1_sc2, cposit);
 
 	DDX_Check(pDX, IDC_oks, _oks);
@@ -119,7 +119,7 @@ BEGIN_MESSAGE_MAP(csettings3, CDialogEx)
 	ON_EN_CHANGE(IDC_d1_pv2, &csettings3::OnChangeD1Pv2)
 	ON_EN_KILLFOCUS(IDC_d1_pv2, &csettings3::OnKillfocusD1Pv2)
 	ON_EN_CHANGE(IDC_vol_master, &csettings3::OnChangeVolMaster)
-	ON_EN_CHANGE(IDC_vol_pan, &csettings3::OnChangeVolPan)
+	//ON_EN_CHANGE(IDC_vol_pan, &csettings3::OnChangeVolPan)
 	ON_WM_TIMER()
 	ON_EN_CHANGE(IDC_d1_sc2, &csettings3::OnChangeD1Sc2)
 	ON_EN_KILLFOCUS(IDC_d1_sc2, &csettings3::OnKillfocusD1Sc2)
@@ -162,7 +162,7 @@ BEGIN_MESSAGE_MAP(csettings3, CDialogEx)
 //	ON_BN_CLICKED(IDC_SND, &csettings3::OnClickedSnd)
 	ON_CBN_KILLFOCUS(IDC_COMBO2, &csettings3::OnKillfocusCombo2)
 //	ON_BN_CLICKED(IDC_CHECK3, &csettings3::OnBnClickedCheck3)
-ON_BN_CLICKED(IDC_BUTTON2, &csettings3::OnClickedButton2)
+//ON_BN_CLICKED(IDC_BUTTON2, &csettings3::OnClickedButton2)
 ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
@@ -427,7 +427,7 @@ void csettings3::OnShowWindow(BOOL bShow, UINT nStatus)
 		cmc = "*";
 		ccc = "*";
 		crc = "*";
-		cpc = "*";  cvc = "*"; cvcbass = "*"; cvcmid = "*"; cvctrib = "*"; 	csc = dbl2charp(spd); cvv_mast = dbl2charp(playvolume*100.); cvv_pan = int2charp(midipan);
+		cpc = "*";  cvc = "*"; cvcbass = "*"; cvcmid = "*"; cvctrib = "*"; 	csc = dbl2charp(spd); cvv_mast = dbl2charp(playvolume*100.); 
 		//printf("%lf %d!!\n", playvolume*100., midipan);
 		//system("pause");
 		char a[1000];
@@ -472,7 +472,7 @@ void csettings3::OnShowWindow(BOOL bShow, UINT nStatus)
 		GetDlgItem(IDC_d1_vol5)->SetWindowText("중간 소리 크기");
 		GetDlgItem(IDC_d1_vol7)->SetWindowText("높은 소리 크기");
 		GetDlgItem(IDC_d1_spd4)->SetWindowText("전체 소리 크기 (0~100)");
-		GetDlgItem(IDC_d1_spd2)->SetWindowText("소리 좌우 비율 (-100~100)");
+//		GetDlgItem(IDC_d1_spd2)->SetWindowText("소리 좌우 비율 (-100~100)");
 		GetDlgItem(IDC_d1_bnk)->SetWindowText("뱅크 \n(지정안함 -1,타악기 127)");
 		GetDlgItem(IDC_d1_inst)->SetWindowText("프로그램 (지정안함 129)");
 		GetDlgItem(IDC_d1_rev)->SetWindowText("잔향 (-127~127)");
@@ -731,26 +731,7 @@ void csettings3::OnChangeVolMaster()
 }
 
 
-void csettings3::OnChangeVolPan()
-{
-	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
-	// CDialogEx::OnInitDialog() 함수를 재지정 
-	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
-	// 이 알림 메시지를 보내지 않습니다.
-	UpdateData(1);
-	setmidivol = 1;
-	midipan = atoi(cvv_pan);
-	if (midipan > 100) {
-		midipan = 100;
-		cvv_pan = "100";
-	}
-	else if (midipan < -100) {
-		midipan = -100;
-		cvv_pan = "-100";
-	}
-	UpdateData(0);
-	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
-}
+
 
 
 void csettings3::OnTimer(UINT_PTR nIDEvent)
@@ -1494,13 +1475,6 @@ void csettings3::OnKillfocusCombo2()
 
 
 
-void csettings3::OnClickedButton2()
-{
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	ab = 1;
-	DestroyWindow();
-	
-}
 
 
 void csettings3::OnDestroy()
